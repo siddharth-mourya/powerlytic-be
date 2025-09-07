@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", // Which JS version to compile down to
+    "module": "commonjs", // Node.js module system
+    "outDir": "dist", // Compiled .js files go here
+    "rootDir": "src", // Source .ts files live here
+    "strict": true, // Enables strict type checking
+    "esModuleInterop": true, // Lets us use modern import/export with CommonJS libs
+    "skipLibCheck": true, // Skips type-checking of node_modules for faster builds
+    "forceConsistentCasingInFileNames": true // Avoids import bugs in case-sensitive OS
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
