@@ -16,6 +16,7 @@ export interface IPort extends Document {
   thresholds?: {
     min?: number;
     max?: number;
+    message?: string;
   };
   metadata?: Record<string, any>;
   createdAt: Date;
@@ -37,6 +38,7 @@ const PortSchema = new Schema<IPort>(
     thresholds: {
       min: Number,
       max: Number,
+      message: String,
     },
     metadata: { type: Schema.Types.Mixed },
   },

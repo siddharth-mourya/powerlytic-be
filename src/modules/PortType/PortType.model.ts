@@ -1,9 +1,13 @@
-import { Schema, model, Document } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
+
+export type ValueFormat = "number" | "string" | "object";
+export type PortCategory = "input" | "output";
 
 export interface IPortType extends Document {
-  name: string; // e.g. "Digital Input", "Energy Port", "Relay Output"
-  category: "input" | "output";
-  valueFormat: "number" | "string" | "object";
+  name: string; // e.g. "Digital Input", "Energy Port"
+  category: PortCategory;
+  valueFormat: ValueFormat;
+  // objectSchema is a mapping like { "phase1": "number", "phase2": "number" }
   objectSchema?: Record<string, string>;
   unit?: string;
   description?: string;
@@ -16,11 +20,11 @@ const PortTypeSchema = new Schema<IPortType>(
     name: { type: String, required: true, unique: true },
     category: { type: String, enum: ["input", "output"], required: true },
     valueFormat: { type: String, enum: ["number", "string", "object"], required: true },
-    objectSchema: { type: Schema.Types.Mixed }, // e.g. { phase1: "number", phase2: "number", phase3: "number" }
+    objectSchema: { type: Schema.Types.Mixed },
     unit: { type: String },
     description: { type: String },
   },
   { timestamps: true }
 );
 
-export const PortType = model<IPortType>("PortType", PortTypeSchema);
+export const PortType = mongoose.model<IPortType>("PortType", PortTypeSchema);

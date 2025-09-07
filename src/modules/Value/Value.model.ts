@@ -1,4 +1,3 @@
-// src/modules/value/value.model.ts
 import mongoose, { Schema, model, Document } from "mongoose";
 import { IOrganization } from "../Organization/Organization.model";
 import { IDevice } from "../Device/Device.model";
@@ -12,9 +11,9 @@ export interface IValue extends Document {
     deviceId: IDevice["_id"];
     portId: IPort["_id"];
   };
-  rawValue: number;
-  calibratedValue: number;
-  quality?: string;
+  rawValue: any;
+  calibratedValue?: number;
+  quality?: "good" | "bad" | "uncertain";
   rawPayload?: Record<string, any>;
 }
 
@@ -27,31 +26,46 @@ const ValueSchema = new Schema<IValue>(
       deviceId: { type: Schema.Types.ObjectId, ref: "Device", required: true },
       portId: { type: Schema.Types.ObjectId, ref: "Port", required: true },
     },
-    rawValue: { type: Number, required: true },
-    calibratedValue: { type: Number, required: true },
+    rawValue: { type: Schema.Types.Mixed, required: true },
+    calibratedValue: { type: Schema.Types.Mixed },
     quality: { type: String, enum: ["good", "bad", "uncertain"], default: "good" },
     rawPayload: { type: Schema.Types.Mixed },
   },
-  { timestamps: false } // we already have ts + ingestTs
+  { timestamps: false }
 );
 
-// When creating model, mark this as a time-series collection
 export const Value = model<IValue>("Value", ValueSchema, "values");
 
+// ✅ Fixed: Use collection.options() instead of info.options
+export async function initValueCollection() {
+  const db = mongoose.connection.db;
+  if (!db) {
+    throw new Error("mongoose.connection.db is not available. Call this after connecting to mongoose.");
+  }
 
-// 👇 Ensure collection exists with time-series config
-async function initValueCollection() {
-  const collections = await mongoose.connection.db?.listCollections({ name: "values" }).toArray();
-  if (collections?.length === 0) {
-    await mongoose.connection.db?.createCollection("values", {
+  const existing = await db.listCollections({ name: "values" }).toArray();
+  if (existing.length === 0) {
+    await db.createCollection("values", {
       timeseries: {
         timeField: "ts",
         metaField: "metadata",
         granularity: "seconds",
       },
     });
-    console.log("⏳ Created time-series collection: values");
+    console.log("✅ Created time-series collection: values");
+  } else {
+    const coll = db.collection("values");
+    const opts = await coll.options();
+    if (opts && "timeseries" in opts) {
+      console.log("✅ 'values' is already a time-series collection");
+    } else {
+      console.warn(
+        "⚠️ 'values' exists but is not a time-series collection. Consider migrating or using a new collection name."
+      );
+    }
   }
-}
-initValueCollection().catch(console.error);
 
+  await db.collection("values").createIndex({ "metadata.deviceId": 1, ts: -1 });
+  await db.collection("values").createIndex({ "metadata.portId": 1, ts: -1 });
+  console.log("✅ Created indexes on values collection");
+}

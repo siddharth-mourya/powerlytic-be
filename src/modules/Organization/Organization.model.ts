@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface IOrganization extends Document {
     name: string;
-    code: string; // short unique code for URL/integration
+    code: string;
     address?: string;
     contactEmail?: string;
     contactPhone?: string;
@@ -14,7 +14,7 @@ export interface IOrganization extends Document {
 const OrganizationSchema = new Schema<IOrganization>(
     {
         name: { type: String, required: true, unique: true },
-        code: { type: String, required: true, unique: true }, // e.g. TATA01
+        code: { type: String, required: true, unique: true },
         address: { type: String },
         contactEmail: { type: String },
         contactPhone: { type: String },
@@ -23,7 +23,4 @@ const OrganizationSchema = new Schema<IOrganization>(
     { timestamps: true }
 );
 
-export const Organization = mongoose.model<IOrganization>(
-    "Organization",
-    OrganizationSchema
-);
+export const Organization = mongoose.model<IOrganization>("Organization", OrganizationSchema);

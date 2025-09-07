@@ -5,7 +5,7 @@ export type UserRole = "CompanyAdmin" | "OrgAdmin" | "User";
 
 export interface IUser extends Document {
     email: string;
-    password: string;
+    password: string; // hashed
     name: string;
     role: UserRole;
     organization: IOrganization["_id"];
@@ -27,11 +27,7 @@ const UserSchema = new Schema<IUser>(
             enum: ["CompanyAdmin", "OrgAdmin", "User"],
             default: "User",
         },
-        organization: {
-            type: Schema.Types.ObjectId,
-            ref: "Organization",
-            required: true,
-        },
+        organization: { type: Schema.Types.ObjectId, ref: "Organization", required: true },
         isActive: { type: Boolean, default: true },
         lastLogin: { type: Date },
     },
