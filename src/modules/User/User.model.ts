@@ -1,16 +1,27 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { IOrganization } from "../Organization/Organization.model";
 
-export type UserRole = "CompanyAdmin" | "OrgAdmin" | "User";
+export enum UserRoles {
+    CompanyAdmin = "CompanyAdmin",
+    OrgAdmin = "OrgAdmin",
+    User = "User"
+}
+
+export type UserRole = keyof typeof UserRoles;
 
 export interface IUser extends Document {
     email: string;
     password: string; // hashed
     name: string;
     role: UserRole;
-    organization: IOrganization["_id"];
+    organization?: IOrganization["_id"];
     phone?: string;
     isActive: boolean;
+
+    // Auth-related fields
+    refreshTokens?: string[];            // hashed refresh tokens
+    resetPasswordToken?: string;         // hashed reset token
+    resetPasswordExpires?: Date;         // expiration time
     lastLogin?: Date;
     createdAt: Date;
     updatedAt: Date;
@@ -27,9 +38,13 @@ const UserSchema = new Schema<IUser>(
             enum: ["CompanyAdmin", "OrgAdmin", "User"],
             default: "User",
         },
-        organization: { type: Schema.Types.ObjectId, ref: "Organization", required: true },
+        organization: { type: Schema.Types.ObjectId, ref: "Organization", },
         isActive: { type: Boolean, default: true },
         lastLogin: { type: Date },
+
+        refreshTokens: [{ type: String }],
+        resetPasswordToken: { type: String },
+        resetPasswordExpires: { type: Date },
     },
     { timestamps: true }
 );

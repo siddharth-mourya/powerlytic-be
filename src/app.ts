@@ -2,7 +2,7 @@ import express from "express";
 import { json, urlencoded } from "body-parser";
 
 // Import routes
-// import authRoutes from "./modules/auth/auth.routes";
+import authRoutes from "./modules/Auth/auth.route";
 import organizationRoutes from "./modules/Organization/Organization.route";
 import userRoutes from "./modules/User/User.route";
 import deviceRoutes from "./modules/Device/Device.route";
@@ -23,7 +23,7 @@ app.use(urlencoded({ extended: true }));
 const API_PREFIX = "/api";
 
 // Routes
-// app.use(`${API_PREFIX}/auth`, authRoutes);
+app.use(`${API_PREFIX}/auth`, authRoutes);
 app.use(`${API_PREFIX}/organizations`, organizationRoutes);
 app.use(`${API_PREFIX}/users`, userRoutes);
 app.use(`${API_PREFIX}/devices`, deviceRoutes);
