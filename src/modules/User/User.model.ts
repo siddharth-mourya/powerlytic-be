@@ -1,11 +1,6 @@
-import mongoose, { Schema, Document } from "mongoose";
-import { IOrganization } from "../Organization/Organization.model";
-
-export enum UserRoles {
-    CompanyAdmin = "CompanyAdmin",
-    OrgAdmin = "OrgAdmin",
-    User = "User"
-}
+import mongoose, { Schema, Document } from 'mongoose';
+import { IOrganization } from '../Organization/Organization.model';
+import { UserRoles } from '../../utils/constants/user';
 
 export type UserRole = keyof typeof UserRoles;
 
@@ -14,14 +9,14 @@ export interface IUser extends Document {
     password: string; // hashed
     name: string;
     role: UserRole;
-    organization?: IOrganization["_id"];
-    phone?: string;
-    isActive: boolean;
+    phone: string;
+    organization?: IOrganization['_id'];
+    isActive?: boolean;
 
     // Auth-related fields
-    refreshTokens?: string[];            // hashed refresh tokens
-    resetPasswordToken?: string;         // hashed reset token
-    resetPasswordExpires?: Date;         // expiration time
+    refreshTokens?: string[]; // hashed refresh tokens
+    resetPasswordToken?: string; // hashed reset token
+    resetPasswordExpires?: Date; // expiration time
     lastLogin?: Date;
     createdAt: Date;
     updatedAt: Date;
@@ -30,15 +25,15 @@ export interface IUser extends Document {
 const UserSchema = new Schema<IUser>(
     {
         email: { type: String, required: true, unique: true },
+        phone: { type: String, required: true, unique: true },
         password: { type: String, required: true },
         name: { type: String, required: true },
-        phone: { type: String },
         role: {
             type: String,
-            enum: ["CompanyAdmin", "OrgAdmin", "User"],
-            default: "User",
+            enum: ['CompanyAdmin', 'OrgAdmin', 'User'],
+            default: 'User',
         },
-        organization: { type: Schema.Types.ObjectId, ref: "Organization", },
+        organization: { type: Schema.Types.ObjectId, ref: 'Organization' },
         isActive: { type: Boolean, default: true },
         lastLogin: { type: Date },
 
@@ -46,7 +41,7 @@ const UserSchema = new Schema<IUser>(
         resetPasswordToken: { type: String },
         resetPasswordExpires: { type: Date },
     },
-    { timestamps: true }
+    { timestamps: true },
 );
 
-export const User = mongoose.model<IUser>("User", UserSchema);
+export const User = mongoose.model<IUser>('User', UserSchema);

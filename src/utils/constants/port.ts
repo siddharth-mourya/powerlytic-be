@@ -1,0 +1,16 @@
+export enum PORT_CATEGORY {
+  INPUT = 'INPUT',
+  OUTPUT = 'OUTPUT',
+}
+
+export enum PORT_VALUE_FORMAT {
+  ANALOG = 'ANALOG',
+  DIGITAL = 'DIGITAL',
+  MODBUS = 'MODBUS',
+  AC_INPUT = 'AC_INPUT',
+}
+
+export enum PORT_STATUS {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+}

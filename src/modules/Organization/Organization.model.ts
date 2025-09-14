@@ -1,12 +1,12 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IOrganization extends Document {
     name: string;
-    code: string;
-    address?: string;
-    contactEmail?: string;
-    contactPhone?: string;
-    isActive: boolean;
+    address: string;
+    orgEmail: string;
+    orgPhone: string;
+    isActive?: boolean;
+    cin?: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -14,13 +14,13 @@ export interface IOrganization extends Document {
 const OrganizationSchema = new Schema<IOrganization>(
     {
         name: { type: String, required: true, unique: true },
-        code: { type: String, required: true, unique: true },
         address: { type: String },
-        contactEmail: { type: String },
-        contactPhone: { type: String },
+        orgEmail: { type: String },
+        orgPhone: { type: String },
         isActive: { type: Boolean, default: true },
+        cin: { type: String },
     },
-    { timestamps: true }
+    { timestamps: true },
 );
 
-export const Organization = mongoose.model<IOrganization>("Organization", OrganizationSchema);
+export const Organization = mongoose.model<IOrganization>('Organization', OrganizationSchema);

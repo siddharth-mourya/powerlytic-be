@@ -1,16 +1,26 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document } from 'mongoose';
+import { PORT_CATEGORY, PORT_VALUE_FORMAT } from '../../utils/constants/port';
 
-export type ValueFormat = "number" | "string" | "object";
-export type PortCategory = "input" | "output";
+/* Example PortType document
+
+const portType = {
+  _id: '2345432',
+  name: 'Input port some name',
+  category: 'input',
+  valueFormat: 'modbus',
+  description: 'description',
+};
+
+*/
+
+export type PortCategory = keyof typeof PORT_CATEGORY;
+export type ValueFormat = keyof typeof PORT_VALUE_FORMAT;
 
 export interface IPortType extends Document {
-  name: string; // e.g. "Digital Input", "Energy Port"
+  name: string;
   category: PortCategory;
   valueFormat: ValueFormat;
-  // objectSchema is a mapping like { "phase1": "number", "phase2": "number" }
-  objectSchema?: Record<string, string>;
-  unit?: string;
-  description?: string;
+  description: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -18,13 +28,15 @@ export interface IPortType extends Document {
 const PortTypeSchema = new Schema<IPortType>(
   {
     name: { type: String, required: true, unique: true },
-    category: { type: String, enum: ["input", "output"], required: true },
-    valueFormat: { type: String, enum: ["number", "string", "object"], required: true },
-    objectSchema: { type: Schema.Types.Mixed },
-    unit: { type: String },
+    category: { type: String, enum: Object.keys(PORT_CATEGORY), required: true },
+    valueFormat: {
+      type: String,
+      enum: Object.keys(PORT_VALUE_FORMAT),
+      required: true,
+    },
     description: { type: String },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export const PortType = mongoose.model<IPortType>("PortType", PortTypeSchema);
+export const PortType = mongoose.model<IPortType>('PortType', PortTypeSchema);

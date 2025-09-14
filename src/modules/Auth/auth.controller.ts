@@ -1,39 +1,8 @@
-import { Request, Response } from "express";
-import { AuthService } from "./auth.service";
-import { User } from "../User/User.model";
+import { Request, Response } from 'express';
+import { AuthService } from './auth.service';
+import { User } from '../User/User.model';
 
 export class AuthController {
-  // Company admin registration (only CompanyAdmins can create other CompanyAdmins — protect this route)
-  static async registerCompanyAdmin(req: Request, res: Response) {
-    try {
-      const user = await AuthService.registerCompanyAdmin(req.body);
-      res.status(201).json({ user });
-    } catch (err: any) {
-      res.status(400).json({ error: err.message });
-    }
-  }
-
-  // Company admin registers an organization and initial OrgAdmin
-  static async registerOrganizationAndAdmin(req: Request, res: Response) {
-    try {
-      const { orgData, adminUser } = req.body;
-      const result = await AuthService.registerOrganizationAndAdmin({ orgData, adminUser });
-      res.status(201).json(result);
-    } catch (err: any) {
-      res.status(400).json({ error: err.message });
-    }
-  }
-
-  // OrgAdmin (or CompanyAdmin) registers an org user
-  static async registerOrgUser(req: Request, res: Response) {
-    try {
-      const user = await AuthService.registerOrgUser(req.body);
-      res.status(201).json(user);
-    } catch (err: any) {
-      res.status(400).json({ error: err.message });
-    }
-  }
-
   static async login(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
@@ -47,7 +16,8 @@ export class AuthController {
   static async refresh(req: Request, res: Response) {
     try {
       const { userId, refreshToken } = req.body;
-      if (!userId || !refreshToken) return res.status(400).json({ error: "userId and refreshToken required" });
+      if (!userId || !refreshToken)
+        return res.status(400).json({ error: 'userId and refreshToken required' });
       const data = await AuthService.refresh(userId, refreshToken);
       res.json(data);
     } catch (err: any) {
@@ -58,7 +28,8 @@ export class AuthController {
   static async logout(req: Request, res: Response) {
     try {
       const { userId, refreshToken } = req.body;
-      if (!userId || !refreshToken) return res.status(400).json({ error: "userId and refreshToken required" });
+      if (!userId || !refreshToken)
+        return res.status(400).json({ error: 'userId and refreshToken required' });
       await AuthService.logout(userId, refreshToken);
       res.status(204).send();
     } catch (err: any) {
@@ -83,7 +54,7 @@ export class AuthController {
     try {
       const { email, token, newPassword } = req.body;
       await AuthService.resetPassword(email, token, newPassword);
-      res.json({ message: "Password reset successful" });
+      res.json({ message: 'Password reset successful' });
     } catch (err: any) {
       res.status(400).json({ error: err.message });
     }
@@ -92,8 +63,17 @@ export class AuthController {
   // get current user info
   static async me(req: any, res: Response) {
     try {
-      if (!req.user) return res.status(401).json({ error: "unauthenticated" });
-      const user = User.findById(req.user.userId).select("-password -refreshTokens -resetPasswordToken -resetPasswordExpires");
+      if (!req.user) return res.status(401).json({ error: 'unauthenticated' });
+      const user = await User.findOne(
+        { _id: req.user.userId },
+        {
+          '-password': 0,
+          '-refreshTokens': 0,
+          '-resetPasswordToken': 0,
+          '-resetPasswordExpires': 0,
+        },
+      );
+      console.log('user', user);
       res.json(user);
     } catch (err: any) {
       res.status(500).json({ error: err.message });
