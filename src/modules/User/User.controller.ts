@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { User } from './User.model';
 import { Organization } from '../Organization/Organization.model';
-import { UserService } from './user.service';
+import { UserService } from './User.service';
 
 // Create user
 export const createUser = async (req: Request, res: Response) => {
