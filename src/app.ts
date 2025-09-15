@@ -13,6 +13,7 @@ import portRoutes from "./modules/Port/Port.route";
 import portTypeRoutes from "./modules/PortType/PortType.route";
 import valueRoutes from "./modules/Value/Value.route";
 import alertRoutes from "./modules/Alert/Alert.route";
+import healthRoutes from "./modules/healthChecks/healthChecks.route";
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(urlencoded({ extended: true }));
 // API prefix
 const API_PREFIX = "/api";
 
+app.use(`${API_PREFIX}/health-check`, healthRoutes)
 // Routes
 app.use(`${API_PREFIX}/auth`, authRoutes);
 app.use(`${API_PREFIX}/organizations`, organizationRoutes);
@@ -40,7 +42,6 @@ app.use(`${API_PREFIX}/alerts`, alertRoutes);
 
 // Health Check
 app.get("/", (req, res) => res.send("🚀 IoT Monitoring Backend is running"));
-app.get(`${API_PREFIX}/health`, (req, res) => res.send("🚀 IoT Monitoring Backend is running, health is good"));
 
 // Error handler (optional)
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
