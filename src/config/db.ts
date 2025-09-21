@@ -8,17 +8,9 @@ export async function connectDB(callBack: Function) {
     }
     try {
         console.log('🔗 Connecting to MongoDB...');
-        mongoose
-            .connect(env.MONGO_URI)
-            .then(() => {
-                console.log('✅ MongoDB connected');
-                callBack();
-            })
-            .catch((err) => {
-                console.error('❌ MongoDB connection error:', err);
-                process.exit(1);
-            });
-
+        await mongoose.connect(env.MONGO_URI);
+        console.log('✅ MongoDB connected');
+        await callBack();
         // If the Node process ends, close the Mongoose connection
         process.on('SIGINT', () => {
             mongoose.connection.close();

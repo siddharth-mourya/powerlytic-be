@@ -2,17 +2,20 @@ import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { User } from '../User/User.model';
 
-export class AuthController {
-  static async login(req: Request, res: Response) {
-    try {
-      const { email, password } = req.body;
-      const data = await AuthService.login(email, password);
-      res.json(data);
-    } catch (err: any) {
-      res.status(401).json({ error: err.message });
+export const login = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    console.log('AuthController.login', email);
+    if (!email || !password) {
+      return res.status(400).json({ error: 'email and password required' });
     }
+    const data = await AuthService.login(email, password);
+    res.json(data);
+  } catch (err: any) {
+    res.status(401).json({ error: err.message });
   }
-
+};
+export class AuthController {
   static async refresh(req: Request, res: Response) {
     try {
       const { userId, refreshToken } = req.body;
