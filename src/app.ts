@@ -18,7 +18,13 @@ import healthRoutes from "./modules/healthChecks/healthChecks.route";
 const app = express();
 
 //cors
-app.use(cors())
+
+app.use(
+  cors({
+    origin: [/\.app\.github\.dev$/], // allow any codespace subdomain
+    credentials: true,
+  })
+);
 
 // Middleware
 app.use(json());

@@ -6,6 +6,7 @@ const router = Router();
 router.get('/', (req: Request, res: Response) => {
   const data = {
     status: 'ok',
+    comment: "lastupdate - added cors",
     timestamp: new Date().toISOString(),
   };
   res.json(data);
