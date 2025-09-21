@@ -9,12 +9,12 @@ import { seedAdmin } from './modules/Auth/seed-companny-admin.route';
 async function startServer() {
     try {
         // Connect to DB first
-        await connectDB(() => null);
-        console.log('✅ Database connected successfully');
 
         // Start server
-        app.listen(env.PORT, () => {
+        app.listen(env.PORT, async () => {
             console.log(`🚀 Server running at http://localhost:${env.PORT} in ${env.NODE_ENV} mode`);
+            await connectDB(() => null);
+            console.log('✅ Database connected successfully');
             // console.log('Server listen callback', server.address());
             // const actualPort = (server.address() as any).port; // ensures correct port
             // console.log(`🚀 Server running at http://localhost:${actualPort} in ${env.NODE_ENV} mode`);
