@@ -11,23 +11,7 @@ export const login = async (req: Request, res: Response) => {
     }
     const { accessToken, refreshToken, user } = await AuthService.login(email, password);
 
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
-      path: "/",
-      maxAge: 1000 * 60 * 15, // 15 minutes
-    });
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
-      path: "/",
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-    });
-
-    res.json({ user });
+    res.json({ user, accessToken, refreshToken });
   } catch (err: any) {
     res.status(401).json({ error: err.message });
   }
@@ -39,26 +23,10 @@ export class AuthController {
       const { userId, refreshToken } = req.body;
       if (!userId || !refreshToken)
         return res.status(400).json({ error: 'userId and refreshToken required' });
+
       const { accessToken, refreshToken: newRefreshToken, user } = await AuthService.refresh(userId, refreshToken);
 
-
-      res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
-        path: "/",
-        maxAge: 1000 * 60 * 15, // 15 minutes
-      });
-
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
-        path: "/",
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-      });
-
-      res.json({ user });
+      res.json({ user, accessToken, refreshToken: newRefreshToken });
     } catch (err: any) {
       res.status(401).json({ error: err.message });
     }

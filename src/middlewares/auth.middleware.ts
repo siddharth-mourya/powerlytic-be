@@ -8,8 +8,7 @@ export interface AuthRequest extends Request {
 }
 
 export function authMiddleware(req: AuthRequest, res: Response, next: NextFunction) {
-  const accessToken = req.cookies.accessToken ||
-    (req.headers.authorization && req.headers.authorization.split(" ")[1]);
+  const accessToken = req.headers.authorization && req.headers.authorization.split(" ")[1];
   if (!accessToken) return res.status(401).json({ error: 'Missing token' });
 
   try {
