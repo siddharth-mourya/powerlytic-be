@@ -32,12 +32,15 @@ export class AuthController {
     }
   }
 
-  static async logout(req: Request, res: Response) {
+  static async logout(req: any, res: Response) {
     try {
-      const { userId, refreshToken } = req.body;
-      if (!userId || !refreshToken)
-        return res.status(400).json({ error: 'userId and refreshToken required' });
-      await AuthService.logout(userId, refreshToken);
+      const { refreshToken } = req.body;
+      if (!refreshToken)
+        return res.status(400).json({ error: 'refreshToken required' });
+
+      if (!req.user) return res.status(401).json({ error: 'unauthenticated' });
+
+      await AuthService.logout(req.user.userId, refreshToken);
       res.status(204).send();
     } catch (err: any) {
       res.status(500).json({ error: err.message });
