@@ -5,24 +5,55 @@ import { User } from '../User/User.model';
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    console.log('AuthController.login', email);
+
     if (!email || !password) {
       return res.status(400).json({ error: 'email and password required' });
     }
-    const data = await AuthService.login(email, password);
-    res.json(data);
+    const { accessToken, refreshToken, user } = await AuthService.login(email, password);
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 1000 * 60 * 15, // 15 minutes
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    });
+
+    res.json({ user });
   } catch (err: any) {
     res.status(401).json({ error: err.message });
   }
 };
+
 export class AuthController {
   static async refresh(req: Request, res: Response) {
     try {
       const { userId, refreshToken } = req.body;
       if (!userId || !refreshToken)
         return res.status(400).json({ error: 'userId and refreshToken required' });
-      const data = await AuthService.refresh(userId, refreshToken);
-      res.json(data);
+      const { accessToken, refreshToken: newRefreshToken, user } = await AuthService.refresh(userId, refreshToken);
+
+      res.cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 1000 * 60 * 15, // 15 minutes
+      });
+
+      res.cookie("refreshToken", newRefreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      });
+
+      res.json({ user });
     } catch (err: any) {
       res.status(401).json({ error: err.message });
     }
@@ -76,7 +107,6 @@ export class AuthController {
           '-resetPasswordExpires': 0,
         },
       );
-      console.log('user', user);
       res.json(user);
     } catch (err: any) {
       res.status(500).json({ error: err.message });

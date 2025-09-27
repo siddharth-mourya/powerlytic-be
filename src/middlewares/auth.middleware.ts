@@ -8,13 +8,12 @@ export interface AuthRequest extends Request {
 }
 
 export function authMiddleware(req: AuthRequest, res: Response, next: NextFunction) {
-  const header = req.headers.authorization;
-  if (!header || !header.startsWith('Bearer '))
-    return res.status(401).json({ error: 'Missing token' });
+  const accessToken = req.cookies.accessToken ||
+    (req.headers.authorization && req.headers.authorization.split(" ")[1]);
+  if (!accessToken) return res.status(401).json({ error: 'Missing token' });
 
-  const token = header.split(' ')[1];
   try {
-    const payload = jwt.verify(token, JWT_SECRET) as any;
+    const payload = jwt.verify(accessToken, JWT_SECRET) as any;
     req.user = {
       userId: payload.userId,
       role: payload.role,
