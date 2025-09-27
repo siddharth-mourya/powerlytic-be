@@ -14,14 +14,16 @@ export const login = async (req: Request, res: Response) => {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "none",
+      path: "/",
       maxAge: 1000 * 60 * 15, // 15 minutes
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "none",
+      path: "/",
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
 
@@ -39,17 +41,20 @@ export class AuthController {
         return res.status(400).json({ error: 'userId and refreshToken required' });
       const { accessToken, refreshToken: newRefreshToken, user } = await AuthService.refresh(userId, refreshToken);
 
+
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "none",
+        path: "/",
         maxAge: 1000 * 60 * 15, // 15 minutes
       });
 
-      res.cookie("refreshToken", newRefreshToken, {
+      res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "none",
+        path: "/",
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
       });
 
