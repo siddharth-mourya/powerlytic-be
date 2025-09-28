@@ -16,7 +16,7 @@ import { authMiddleware, requireRole } from '../../middlewares/auth.middleware';
 const router = Router();
 
 router.get('/org/:orgID', authMiddleware, getUsersInOrg);
-router.get('/', authMiddleware, requireRole('CompanyAdmin'), getUsers);
+router.get('/', authMiddleware, requireRole(['CompanyAdmin', 'orgAdmin']), getUsers);
 router.get('/:id', authMiddleware, getUserById);
 router.put('/:id', authMiddleware, updateUser);
 router.delete('/:id', authMiddleware, deleteUser);

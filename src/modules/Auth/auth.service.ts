@@ -47,7 +47,14 @@ export class AuthService {
     return {
       accessToken,
       refreshToken: refreshTokenPlain,
-      user: { _id: user._id, email: user.email, role: user.role, organization: user.organization, name: user.name, phone: user.phone },
+      user: {
+        _id: user._id,
+        email: user.email,
+        role: user.role,
+        organization: user.organization,
+        name: user.name,
+        phone: user.phone,
+      },
     };
   }
 
@@ -83,7 +90,18 @@ export class AuthService {
     user?.refreshTokens?.splice(foundIndex, 1, newRefreshHash);
     await user.save();
 
-    return { accessToken, refreshToken: newRefreshPlain, user: { _id: user._id, email: user.email, role: user.role, organization: user.organization, name: user.name, phone: user.phone } };
+    return {
+      accessToken,
+      refreshToken: newRefreshPlain,
+      user: {
+        _id: user._id,
+        email: user.email,
+        role: user.role,
+        organization: user.organization,
+        name: user.name,
+        phone: user.phone,
+      },
+    };
   }
 
   // logout: revoke a refresh token
@@ -104,6 +122,7 @@ export class AuthService {
         break;
       }
     }
+
     if (foundIndex >= 0) {
       user.refreshTokens.splice(foundIndex, 1);
       await user.save();

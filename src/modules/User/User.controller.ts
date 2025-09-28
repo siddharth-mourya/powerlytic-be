@@ -3,6 +3,14 @@ import { User } from './User.model';
 import { Organization } from '../Organization/Organization.model';
 import { UserService } from './User.service';
 
+const exludeFields = {
+  '-password': 0,
+  '-refreshTokens': 0,
+  '-resetPasswordToken': 0,
+  '-resetPasswordExpires': 0,
+  '-__v': 0,
+};
+
 // Create user
 export const createUser = async (req: Request, res: Response) => {
   try {
@@ -47,9 +55,22 @@ export const registerOrgUser = async (req: Request, res: Response) => {
 };
 
 // List users with optional org filter
-export const getUsers = async (req: Request, res: Response) => {
+export const getUsers = async (req: any, res: Response) => {
   try {
-    const users = await User.find().populate('organization');
+    if (req.user.role !== 'CompanyAdmin' && req.user.role !== 'OrgAdmin') {
+      // only CompanyAdmin and OrgAdmin can list users
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+    if (req.user.role === 'OrgAdmin') {
+      // OrgAdmin can see only users in their org
+      const users = await User.find({ organization: req.user.orgId }, exludeFields).populate(
+        'organization',
+        '-__v',
+      );
+      return res.json(users);
+    }
+    // CompanyAdmin can see all users
+    const users = await User.find({}, exludeFields).populate('organization');
     res.json(users);
   } catch (err) {
     res.status(500).json({ message: (err as Error).message });
