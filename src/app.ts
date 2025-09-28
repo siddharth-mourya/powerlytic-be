@@ -21,7 +21,12 @@ app.use((req, res, next) => {
   console.log('Origin:', req.headers.origin);
   next();
 });
-const allowedOrigins = ['http://localhost:3000', 'http://192.168.1.4:3000', "https://powerlytic-be-app-883883911909.europe-west1.run.app"];
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://192.168.1.4:3000',
+  'https://powerlytic-be-app-883883911909.europe-west1.run.app',
+  'https://powerlytic-ui.vercel.app/',
+];
 
 //cors
 const corsOptions = {
