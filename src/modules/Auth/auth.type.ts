@@ -12,6 +12,6 @@ export interface RegisterRequest {
   email: string;
   password: string;
   name: string;
-  role?: "CompanyAdmin" | "OrgAdmin" | "User";
+  role?: 'CompanyAdmin' | 'OrgAdmin' | 'orgUser';
   organizationId?: string; // for OrgAdmin/User
 }

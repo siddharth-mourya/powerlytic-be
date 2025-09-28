@@ -67,12 +67,13 @@ export class UserService {
     password: string;
     name: string;
     role: 'OrgAdmin' | 'Operator' | 'Viewer';
-    organizationId: string;
+    organization: string;
+    phone: string;
   }) {
     const exists = await User.findOne({ email: payload.email });
     if (exists) throw new Error('Email already registered');
 
-    const org = await Organization.findById(payload.organizationId);
+    const org = await Organization.findById(payload.organization);
     if (!org) throw new Error('Organization not found');
 
     const hashed = await bcrypt.hash(payload.password, BCRYPT_ROUNDS);
@@ -80,8 +81,9 @@ export class UserService {
       email: payload.email,
       password: hashed,
       name: payload.name,
+      phone: payload.phone,
       role: payload.role,
-      organization: payload.organizationId,
+      organization: payload.organization,
     });
 
     user.password = undefined as any;

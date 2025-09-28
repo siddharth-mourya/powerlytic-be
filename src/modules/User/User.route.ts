@@ -38,6 +38,11 @@ router.post(
 );
 
 // Org Admin or CompanyAdmin can create org users
-router.post('/register-org-user', authMiddleware, requireRole('OrgAdmin'), registerOrgUser);
+router.post(
+  '/register-org-user',
+  authMiddleware,
+  requireRole(['OrgAdmin', 'CompanyAdmin']),
+  registerOrgUser,
+);
 
 export default router;
