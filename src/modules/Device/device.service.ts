@@ -1,6 +1,5 @@
 import { Device } from './Device.model';
 import { DeviceModel } from '../DeviceModel/DeviceModel.model';
-import { IPort, Port } from '../Port/Port.model';
 
 interface CreateDeviceDto {
   imei: string;
@@ -15,25 +14,30 @@ export const createDevice = async (data: CreateDeviceDto) => {
   if (exists) throw new Error('Device with this IMEI already exists');
 
   // 2. Fetch device model and its ports
-  const model = await DeviceModel.findById(data.deviceModelId);
+  const model = await DeviceModel.findById(data.deviceModelId).lean();
   if (!model) throw new Error('Device model not found');
 
-  // 3. Create Device
-  const device = await Device.create(data);
+  // 3. Build ports array from model.ports
+  const portsArray = model.ports.map((port: any, index: number) => ({
+    name: `${port.name || 'Port'}-${index + 1}`,
+    portNumber: index + 1,
+    portTypeId: port.portTypeId,
+    calibrationValue: { scaling: 1, offset: 0 },
+    status: 'INACTIVE', // default from PORT_STATUS
+    thresholds: {},
+    slaves: port.type === 'modbus' ? [] : undefined, // empty array for modbus
+  }));
 
-  // 4. Auto-create Ports based on model
-  const portsArray: Array<Partial<IPort>> = [];
-  model.ports.map(async (port, index) => {
-    const portNumber = index + 1;
-    portsArray.push({
-      deviceId: device._id,
-      name: `${port.portTypeId}-${portNumber}`,
-      portNumber,
-      portTypeId: port.portTypeId,
-    });
+  // 4. Create Device with embedded ports
+  const device = await Device.create({
+    imei: data.imei,
+    deviceModelId: data.deviceModelId,
+    name: data.name,
+    metadata: data.metadata,
+    ports: portsArray,
   });
-  const ports = await Port.insertMany(portsArray);
-  return { device, ports };
+
+  return device;
 };
 
 export const getDevices = async (query: any) => {

@@ -23,9 +23,17 @@ const data = {
   ports: [
     {
       portNumber: 'p1',
+      deviceDisplayPortName: 'd1', // for UI/device display purposes
       portTypeId: '2345432',
       description: '2345543',
       microControllerPin: 'd3',
+    },
+    {
+      portNumber: 'p2',
+      deviceDisplayPortName: 'd1', // for UI/device display purposes
+      portTypeId: '2345412',
+      description: '2345543',
+      microControllerPin: 'd4',
     },
   ],
 };

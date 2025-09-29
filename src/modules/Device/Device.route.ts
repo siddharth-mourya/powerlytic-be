@@ -15,6 +15,6 @@ router.post('/', authMiddleware, requireRole(UserRoles.CompanyAdmin), createDevi
 router.get('/', authMiddleware, getDevices);
 router.get('/:id', authMiddleware, getDeviceById);
 router.put('/:id', authMiddleware, requireRole(UserRoles.OrgAdmin), updateDevice);
-router.delete('/:id', authMiddleware, deleteDevice);
+router.delete('/:id', authMiddleware, requireRole(UserRoles.CompanyAdmin), deleteDevice);
 
 export default router;
