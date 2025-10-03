@@ -9,7 +9,7 @@ export interface IDeviceModel extends Document {
     portNumber: string;
     portTypeId: IPortType['_id'];
     microControllerPin: string;
-    description?: string;
+    description: string;
   }[];
   createdAt: Date;
   updatedAt: Date;
@@ -48,7 +48,7 @@ const DeviceModelSchema = new Schema<IDeviceModel>(
         portNumber: { type: String },
         portTypeId: { type: Schema.Types.ObjectId, ref: 'PortType', required: true },
         microControllerPin: { type: String },
-        description: { type: String, default: '' },
+        description: { type: String },
       },
     ],
   },

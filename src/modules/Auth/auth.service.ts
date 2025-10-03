@@ -4,12 +4,11 @@ import crypto from 'crypto';
 import { User } from '../User/User.model';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
-const ACCESS_EXP = Number(process.env.JWT_ACCESS_EXPIRY) || 60 * 5; // 5minutes
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || '10', 10);
 const RESET_TOKEN_EXP_MIN = parseInt(process.env.RESET_TOKEN_EXPIRY_MIN || '60', 10);
 
 function signAccessToken(payload: object) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: ACCESS_EXP });
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: '10m' });
 }
 
 // function signRefreshToken(payload: object) {
