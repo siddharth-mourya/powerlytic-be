@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { PortType } from "./PortType.model";
+import { Request, Response } from 'express';
+import { PortType } from './PortType.model';
 
 export const createPortType = async (req: Request, res: Response) => {
   const portType = await PortType.create(req.body);
@@ -22,6 +22,6 @@ export const updatePortType = async (req: Request, res: Response) => {
 };
 
 export const deletePortType = async (req: Request, res: Response) => {
-  await PortType.findByIdAndDelete(req.params.id);
-  res.status(204).send();
+  const data = await PortType.findByIdAndDelete(req.params.id);
+  res.status(200).send(data);
 };
