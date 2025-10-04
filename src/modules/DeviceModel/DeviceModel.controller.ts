@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { DeviceModel } from "./DeviceModel.model";
+import { Request, Response } from 'express';
+import { DeviceModel } from './DeviceModel.model';
 
 // Create
 export const createDeviceModel = async (req: Request, res: Response) => {
@@ -9,13 +9,13 @@ export const createDeviceModel = async (req: Request, res: Response) => {
 
 // List with optional filters
 export const getDeviceModels = async (req: Request, res: Response) => {
-  const models = await DeviceModel.find().populate("ports.portTypeId");
+  const models = await DeviceModel.find().populate('ports.portType');
   res.json(models);
 };
 
 // Get one
 export const getDeviceModelById = async (req: Request, res: Response) => {
-  const model = await DeviceModel.findById(req.params.id).populate("ports.portTypeId");
+  const model = await DeviceModel.findById(req.params.id).populate('ports.portType');
   res.json(model);
 };
 
