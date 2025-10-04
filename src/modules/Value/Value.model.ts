@@ -1,7 +1,7 @@
 import mongoose, { Schema, model, Document } from 'mongoose';
 import { IOrganization } from '../Organization/Organization.model';
 import { IDevice } from '../Device/Device.model';
-import { IPort } from '../Port/Port.model';
+// import { IPort } from '../Port/Port.model';
 
 export interface IValue extends Document {
   ts: Date;
@@ -9,7 +9,7 @@ export interface IValue extends Document {
   metadata: {
     orgId: IOrganization['_id'];
     deviceId: IDevice['_id'];
-    portId: IPort['_id'];
+    // portId: IPort['_id'];
   };
   rawValue: any;
   calibratedValue?: number;
