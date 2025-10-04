@@ -18,7 +18,7 @@ const OrganizationSchema = new Schema<IOrganization>(
     orgEmail: { type: String, required: true, unique: true },
     orgPhone: { type: String, required: true, unique: true },
     isActive: { type: Boolean, default: true },
-    cin: { type: String },
+    cin: { type: String, default: '' },
   },
   { timestamps: true },
 );

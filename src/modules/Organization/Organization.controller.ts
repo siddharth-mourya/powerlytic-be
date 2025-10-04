@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import { Organization } from "./Organization.model";
-import { User } from "../User/User.model";
-import { Device } from "../Device/Device.model";
+import { Request, Response } from 'express';
+import { Organization } from './Organization.model';
+import { User } from '../User/User.model';
+import { Device } from '../Device/Device.model';
 
 // Create organization
 export const createOrganization = async (req: Request, res: Response) => {
@@ -27,7 +27,7 @@ export const getOrganizations = async (req: Request, res: Response) => {
 export const getOrganizationById = async (req: Request, res: Response) => {
   try {
     const org = await Organization.findById(req.params.id);
-    if (!org) return res.status(404).json({ message: "Organization not found" });
+    if (!org) return res.status(404).json({ message: 'Organization not found' });
 
     const users = await User.find({ organization: org._id });
     const devices = await Device.find({ organizationId: org._id });
@@ -42,7 +42,7 @@ export const getOrganizationById = async (req: Request, res: Response) => {
 export const updateOrganization = async (req: Request, res: Response) => {
   try {
     const org = await Organization.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!org) return res.status(404).json({ message: "Organization not found" });
+    if (!org) return res.status(404).json({ message: 'Organization not found' });
     res.json(org);
   } catch (err) {
     res.status(400).json({ message: (err as Error).message });
