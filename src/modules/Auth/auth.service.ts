@@ -5,15 +5,16 @@ import { User } from '../User/User.model';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || '10', 10);
-const RESET_TOKEN_EXP_MIN = parseInt(process.env.RESET_TOKEN_EXPIRY_MIN || '60', 10);
+const RESET_TOKEN_EXP_MIN = 10;
+const REFRESH_TOKEN_EXP_DAYS = 10;
 
 function signAccessToken(payload: object) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '10m' });
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' });
 }
 
-// function signRefreshToken(payload: object) {
-//   return jwt.sign(payload, JWT_SECRET, { expiresIn: REFRESH_EXP });
-// }
+function signRefreshToken(payload: object) {
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: `${REFRESH_TOKEN_EXP_DAYS}d` });
+}
 
 function generateRandomToken(bytes = 32) {
   return crypto.randomBytes(bytes).toString('hex');
@@ -75,7 +76,7 @@ export class AuthService {
     if (foundIndex === -1) throw new Error('Invalid refresh token');
 
     // Issue new access token
-    const accessToken = signAccessToken({
+    const accessToken = signRefreshToken({
       userId: user._id,
       role: user.role,
       orgId: user.organization ?? null,
