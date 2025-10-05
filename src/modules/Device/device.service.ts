@@ -50,7 +50,7 @@ export const getDevices = async (query: any) => {
 };
 
 export const getDeviceById = async (id: string) => {
-  return Device.findById(id).populate('deviceModelId').lean();
+  return Device.findById(id).populate('deviceModelId').lean().populate('organizationId');
 };
 
 export const updateDevice = async (id: string, data: any) => {
