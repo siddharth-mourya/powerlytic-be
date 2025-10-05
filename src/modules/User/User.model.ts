@@ -30,8 +30,8 @@ const UserSchema = new Schema<IUser>(
     name: { type: String, required: true },
     role: {
       type: String,
-      enum: ['CompanyAdmin', 'OrgAdmin', 'orgUser'],
-      default: 'orgUser',
+      enum: ['CompanyAdmin', 'OrgAdmin', 'OrgUser'],
+      default: 'OrgUser',
     },
     organization: { type: Schema.Types.ObjectId, ref: 'Organization' },
     isActive: { type: Boolean, default: true },
