@@ -10,7 +10,7 @@ export interface IPorts {
   name: string;
   portNumber: number;
   deviceId: IDevice['_id'];
-  portTypeId: IPortType['_id'];
+  portType: IPortType['_id'];
   unit?: string;
   calibrationValue?: {
     scaling: number;
@@ -118,7 +118,7 @@ const PortSchema = new Schema(
     name: { type: String, required: true },
     portNumber: { type: Number, required: true },
     deviceId: { type: Schema.Types.ObjectId, ref: 'Device' },
-    portTypeId: { type: Schema.Types.ObjectId, ref: 'PortType', required: true },
+    portType: { type: Schema.Types.ObjectId, ref: 'PortType', required: true },
     unit: String,
     calibrationValue: CalibrationSchema,
     status: { type: String, enum: Object.keys(PORT_STATUS) },
@@ -131,10 +131,10 @@ const PortSchema = new Schema(
 // 🔹 Main Device Schema
 const DeviceSchema = new Schema<IDevice>(
   {
-    organizationId: { type: Schema.Types.ObjectId, ref: 'Organization' },
     name: { type: String, required: true },
     imei: { type: String, required: true, unique: true },
     deviceModelId: { type: Schema.Types.ObjectId, ref: 'DeviceModel', required: true },
+    organizationId: { type: Schema.Types.ObjectId, ref: 'Organization' },
     status: { type: String, enum: ['online', 'offline', 'maintenance'], default: 'offline' },
     location: { lat: Number, lng: Number, address: String },
     metadata: { type: Schema.Types.Mixed },

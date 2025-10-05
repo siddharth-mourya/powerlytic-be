@@ -21,7 +21,7 @@ export const createDevice = async (data: CreateDeviceDto) => {
   const portsArray = model.ports.map((port: any, index: number) => ({
     name: `${port.name || 'Port'}-${index + 1}`,
     portNumber: index + 1,
-    portTypeId: port.portTypeId,
+    portType: port.portType,
     calibrationValue: { scaling: 1, offset: 0 },
     status: 'INACTIVE', // default from PORT_STATUS
     thresholds: {},
