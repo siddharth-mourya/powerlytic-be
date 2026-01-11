@@ -11,6 +11,7 @@ export interface IPortType extends Document {
   description: string;
   createdAt: Date;
   updatedAt: Date;
+  codeName?: string;
 }
 
 const PortTypeSchema = new Schema<IPortType>(
@@ -23,6 +24,7 @@ const PortTypeSchema = new Schema<IPortType>(
       required: true,
     },
     description: { type: String },
+    codeName: { type: String },
   },
   { timestamps: true },
 );
@@ -37,6 +39,7 @@ const portType1 = {
   category: 'input',
   valueFormat: 'modbus',
   description: 'description',
+  codeName: 'MI',
 };
 
 

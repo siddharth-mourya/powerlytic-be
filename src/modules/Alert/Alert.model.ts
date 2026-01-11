@@ -1,20 +1,6 @@
-import mongoose, { Schema, Document } from 'mongoose';
-import { IDevice } from '../Device/Device.model';
+import mongoose, { Schema } from 'mongoose';
 
-export interface IAlert extends Document {
-  deviceId: IDevice['_id'];
-  // portId: IPort["_id"];
-  triggeredAt: Date;
-  value: any;
-  message: string;
-  severity: 'low' | 'medium' | 'high';
-  status: 'new' | 'acknowledged' | 'resolved';
-  sentTo?: { emails?: string[]; phones?: string[] };
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const AlertSchema = new Schema<IAlert>(
+const AlertSchema = new Schema(
   {
     deviceId: { type: Schema.Types.ObjectId, ref: 'Device', required: true },
     // portId: { type: Schema.Types.ObjectId, ref: "Port", required: true },
@@ -30,4 +16,4 @@ const AlertSchema = new Schema<IAlert>(
 
 AlertSchema.index({ status: 1, triggeredAt: -1 });
 
-export const Alert = mongoose.model<IAlert>('Alert', AlertSchema);
+export const Alert = mongoose.model('Alert', AlertSchema);
