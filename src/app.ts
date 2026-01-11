@@ -25,6 +25,7 @@ const allowedOrigins = [
   'http://192.168.1.4:3000',
   'https://powerlytic-be-github-333639897356.europe-west1.run.app',
   'https://powerlytic-ui.vercel.app',
+  'https://powerlytic-r7kj4lmie-siddharthmouryas-projects.vercel.app/',
 ];
 
 //cors
