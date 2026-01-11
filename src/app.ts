@@ -26,6 +26,7 @@ const allowedOrigins = [
   'https://powerlytic-be-github-333639897356.europe-west1.run.app',
   'https://powerlytic-ui.vercel.app',
   'https://powerlytic-ui-git-dev-siddharthmouryas-projects.vercel.app',
+  'https://powerlytic-ui-git-main-siddharthmouryas-projects.vercel.app',
 ];
 
 //cors
