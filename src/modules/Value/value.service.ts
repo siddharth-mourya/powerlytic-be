@@ -178,9 +178,11 @@ export const getPortValues = async (
 
 /**
  * Get latest value for each port of a device
+ * For Modbus ports, returns latest value for each read (not just one per port)
  */
 export const getLatestValues = async (deviceId: string) => {
-  // Pipeline to get latest value for each port
+  // Pipeline to get latest value for each port + read combination
+  // Groups by portKey and readId (readId will be null for DI/AI ports)
   const latest = await Value.aggregate([
     {
       $match: {
@@ -192,9 +194,15 @@ export const getLatestValues = async (deviceId: string) => {
     },
     {
       $group: {
-        _id: '$port.portKey',
+        _id: {
+          portKey: '$port.portKey',
+          readId: '$modbusRead.readId', // null for DI/AI, actual ID for Modbus
+        },
         lastValue: { $first: '$$ROOT' },
       },
+    },
+    {
+      $sort: { '_id.portKey': 1, '_id.readId': 1 }, // Sort by port then read for consistency
     },
   ]);
 

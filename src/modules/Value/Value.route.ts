@@ -1,88 +1,107 @@
 import { Router } from 'express';
 import * as valueController from './Value.controller';
+import { authMiddleware } from '../../middlewares/auth.middleware';
 
 /**
  * 📊 Value Routes
  *
  * Device value ingestion and retrieval endpoints
+ * Mounted at /api/values
+ *
+ * All routes include deviceId in the URL path for proper identification
  */
 
-const router = Router({ mergeParams: true }); // mergeParams allows access to :deviceId from parent router
+const router = Router();
 
 /**
- * POST /api/devices/:deviceId/values
+ * POST /api/values/devices/:deviceId
  * Store values from device (array of readings)
  */
-router.post('/', valueController.storeValues);
+router.post('/devices/:deviceId', authMiddleware, valueController.storeValues);
 
 /**
- * GET /api/devices/:deviceId/values
+ * GET /api/values/devices/:deviceId
  * Query values with optional filters (portKey, readId, startTime, endTime, limit)
  */
-router.get('/', valueController.getValues);
+router.get('/devices/:deviceId', authMiddleware, valueController.getValues);
 
 /**
- * GET /api/devices/:deviceId/values/latest
+ * GET /api/values/devices/:deviceId/latest
  * Get latest value for each port of device
  */
-router.get('/latest', valueController.getLatestValues);
+router.get('/devices/:deviceId/latest', authMiddleware, valueController.getLatestValues);
 
 /**
- * GET /api/devices/:deviceId/values/port/:portKey
+ * GET /api/values/devices/:deviceId/port/:portKey
  * Get values for specific port with time filters
+ * Query params: startTime, endTime, limit
  */
-router.get('/port/:portKey', valueController.getPortValues);
+router.get('/devices/:deviceId/port/:portKey', authMiddleware, valueController.getPortValues);
 
 /**
- * GET /api/devices/:deviceId/values/modbus/:readId
+ * GET /api/values/devices/:deviceId/modbus/:readId
  * Get values for specific modbus read with time filters
+ * Query params: startTime, endTime, limit
  */
-router.get('/modbus/:readId', valueController.getModbusReadValues);
+router.get(
+  '/devices/:deviceId/modbus/:readId',
+  authMiddleware,
+  valueController.getModbusReadValues,
+);
 
 /**
- * GET /api/devices/:deviceId/values/stats/:portKey
+ * GET /api/values/devices/:deviceId/stats/:portKey
  * Get statistics for port (min, max, avg, count) over time range
+ * Query params: startTime, endTime (both required)
  */
-router.get('/stats/:portKey', valueController.getPortStats);
+router.get('/devices/:deviceId/stats/:portKey', authMiddleware, valueController.getPortStats);
 
 /**
- * GET /api/devices/:deviceId/values/table
+ * GET /api/values/devices/:deviceId/table
  * Get table view: All values organized by timestamp
  * Query params: startTime, endTime, limit
  */
-router.get('/table', valueController.getTableView);
+router.get('/devices/:deviceId/table', authMiddleware, valueController.getTableView);
 
 /**
- * GET /api/devices/:deviceId/values/snapshot
+ * GET /api/values/devices/:deviceId/snapshot
  * Get latest snapshot: Current value for each port
  */
-router.get('/snapshot', valueController.getLatestSnapshot);
+router.get('/devices/:deviceId/snapshot', authMiddleware, valueController.getLatestSnapshot);
 
 /**
- * GET /api/devices/:deviceId/values/timeseries/:portKey
+ * GET /api/values/devices/:deviceId/timeseries/:portKey
  * Get time-series data for specific port (for charts)
  * Query params: startTime, endTime, limit
  */
-router.get('/timeseries/:portKey', valueController.getPortTimeSeries);
+router.get(
+  '/devices/:deviceId/timeseries/:portKey',
+  authMiddleware,
+  valueController.getPortTimeSeries,
+);
 
 /**
- * GET /api/devices/:deviceId/values/timeseries/modbus/:readId
+ * GET /api/values/devices/:deviceId/timeseries/modbus/:readId
  * Get time-series data for specific modbus read
  * Query params: startTime, endTime, limit
  */
-router.get('/timeseries/modbus/:readId', valueController.getModbusReadTimeSeries);
+router.get(
+  '/devices/:deviceId/timeseries/modbus/:readId',
+  authMiddleware,
+  valueController.getModbusReadTimeSeries,
+);
 
 /**
- * GET /api/devices/:deviceId/values/status
+ * GET /api/values/devices/:deviceId/status
  * Get device status summary
  */
-router.get('/status', valueController.getStatusSummary);
+router.get('/devices/:deviceId/status', authMiddleware, valueController.getStatusSummary);
 
 /**
- * GET /api/devices/:deviceId/values/export
+ * GET /api/values/devices/:deviceId/export
  * Export values as JSON (CSV-ready format)
  * Query params: startTime, endTime
  */
-router.get('/export', valueController.getExportData);
+router.get('/devices/:deviceId/export', authMiddleware, valueController.getExportData);
 
 export default router;
