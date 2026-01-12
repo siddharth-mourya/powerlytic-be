@@ -58,7 +58,7 @@ app.use(`${API_PREFIX}/health-check`, healthRoutes);
 app.use(`${API_PREFIX}/auth`, authRoutes);
 app.use(`${API_PREFIX}/organizations`, organizationRoutes);
 app.use(`${API_PREFIX}/users`, userRoutes);
-app.use(`${API_PREFIX}/devices`, deviceRoutes);
+app.use(`${API_PREFIX}/device`, deviceRoutes);
 app.use(`${API_PREFIX}/device-models`, deviceModelRoutes);
 app.use(`${API_PREFIX}/port-types`, portTypeRoutes);
 app.use(`${API_PREFIX}/values`, valueRoutes);
