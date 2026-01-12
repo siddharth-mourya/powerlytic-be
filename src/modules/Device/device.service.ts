@@ -104,6 +104,26 @@ export const getDeviceById = async (id: string) => {
   return Device.findById(id).populate('deviceModelId').populate('organizationId').lean();
 };
 
+export const getConfigByDeviceId = async (id: string) => {
+  const device = await Device.findById(id).lean();
+  if (!device) throw new Error('Device not found');
+  return {
+    modbusSlaves: device.ports.flatMap((port: any) =>
+      (port.modbusSlaves || []).map((slave: any) => ({
+        slave_id: slave.slaveId,
+        serial: slave.serial,
+        polling: slave.polling,
+        registers: slave.reads.map((read: any) => ({
+          readId: read.readId,
+          func: read.functionCode,
+          start: read.startAddress,
+          bits: read.bitsToRead,
+        })),
+      })),
+    ),
+  };
+};
+
 /**
  * DEVICE UPDATE FLOW (Company Admin or Buyer)
  * Only allows updating:

@@ -21,6 +21,16 @@ export const getDeviceById = async (req: Request, res: Response) => {
   res.json(device);
 };
 
+export const getConfigByDeviceId = async (req: Request, res: Response) => {
+  try {
+    const config = await deviceService.getConfigByDeviceId(req.params.id);
+    if (!config) return res.status(404).json({ error: 'Configuration not found for the Device' });
+    res.json(config);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message || 'Unable to retrieve the Device configuration' });
+  }
+};
+
 export const updateDevice = async (req: Request, res: Response) => {
   try {
     const updated = await deviceService.updateDevice(req.params.id, req.body);
