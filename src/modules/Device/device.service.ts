@@ -109,7 +109,7 @@ export const getConfigByDeviceId = async (id: string) => {
   if (!device) throw new Error('Device not found');
   return {
     device_id: device._id,
-    configId: device.configId,
+    configId: 'cfg-modbus-005',
     imei: device.imei,
     modbusSlaves: device.ports.flatMap((port: any) =>
       (port.modbusSlaves || []).map((slave: any) => ({
