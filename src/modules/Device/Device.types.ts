@@ -115,14 +115,15 @@ export interface IDevice {
 }
 
 export interface DeploymentStatus {
-  status: 'pending' | 'sent' | 'saved' | 'error';
+  status: 'pending' | 'sent' | 'applied' | 'error';
   errorMessage?: string;
   sentAt?: Date;
   savedAt?: Date;
 }
 
 export interface UpdateStatusPayload {
-  status: 'saved' | 'error';
+  status: 'applied' | 'error';
+  configId?: string;
   errorMessage?: string;
 }
 

@@ -908,24 +908,18 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"status\": \"deployed\",\n  \"message\": \"Deployment successful\"\n}"
+              "raw": "{\n  \"status\": \"applied\",\n  \"configId\": \"CONF123456\",\n  \"message\": \"Deployment successful\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/device/:id/deployment-status",
+              "raw": "{{baseUrl}}/api/device/695fe1021270a1366a9f5766/deployment-status",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
                 "device",
-                ":id",
+                "695fe1021270a1366a9f5766",
                 "deployment-status"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": ""
-                }
               ]
             }
           },
@@ -1901,17 +1895,17 @@
   },
   "variable": [
     {
-      "id": "0d558c1a-c731-46a5-b1a4-e5e0e6a36b4b",
+      "id": "496663ca-da63-48fa-bc40-b1d160b6839b",
       "key": "baseUrl",
       "value": ""
     },
     {
-      "id": "952d09dd-d536-4bfc-9ebd-3f055b3cbd49",
+      "id": "92395c08-cfa3-4222-8743-c3f2e4331dec",
       "key": "accessToken",
       "value": ""
     },
     {
-      "id": "141c54ce-1c69-459e-aba5-699126dc6fd3",
+      "id": "4e7b1317-112d-432d-a99e-0374d696de5e",
       "key": "refreshToken",
       "value": ""
     }

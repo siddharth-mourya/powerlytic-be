@@ -74,7 +74,7 @@ export class DeploymentService {
 
   /**
    * Update deployment status (called by device after processing config)
-   * Device sends 'saved' when config was applied successfully, or 'error' if failed
+   * Device sends 'applied' when config was applied successfully, or 'error' if failed
    */
   async updateDeploymentStatus(
     deviceId: string,
@@ -91,7 +91,7 @@ export class DeploymentService {
       // Update status
       device.deployment.status = payload.status;
 
-      if (payload.status === 'saved') {
+      if (payload.status === 'applied') {
         device.deployment.savedAt = new Date();
         device.deployment.errorMessage = null;
       } else if (payload.status === 'error') {
