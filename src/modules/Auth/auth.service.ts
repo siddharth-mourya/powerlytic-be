@@ -5,11 +5,11 @@ import { User } from '../User/User.model';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || '10', 10);
-const RESET_TOKEN_EXP_MIN = 10;
+const RESET_TOKEN_EXP_MIN = 60;
 const REFRESH_TOKEN_EXP_DAYS = 10;
 
 function signAccessToken(payload: object) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' });
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: '60m' });
 }
 
 function signRefreshToken(payload: object) {
