@@ -2,6 +2,7 @@ import { Device } from './Device.model';
 import axios from 'axios';
 import * as deviceService from './device.service';
 import { DeploymentStatus, UpdateStatusPayload } from './Device.types';
+import { calculateConfigHash } from '../../utils/transformers/config-hash';
 
 export class DeploymentService {
   /**
@@ -126,7 +127,7 @@ export class DeploymentService {
         externalApiUrl,
         {
           message: 'config',
-          hash: 'affec96b2753276f34ee87500bfc60836a1ac7a86af93fcac5edb4301b5ee4c3',
+          hash: calculateConfigHash(config),
           configId: config.configId,
           config,
         },

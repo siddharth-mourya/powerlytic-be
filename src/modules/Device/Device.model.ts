@@ -67,7 +67,6 @@ const ModbusSlaveSchema = new Schema({
   slaveId: {
     type: String,
     required: true,
-    immutable: true,
   },
   portKey: {
     type: String,

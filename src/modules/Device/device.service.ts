@@ -113,8 +113,8 @@ export const getConfigByDeviceId = async (id: string) => {
     imei: device.imei,
     modbusSlaves: device.ports.flatMap((port: any) =>
       (port.modbusSlaves || []).map((slave: any) => ({
-        unique_slave_id: '74bda1fd-119c-4589-b656-8dcb5ebf7050',
-        slave_id: 4,
+        unique_slave_id: slave.slaveId,
+        slave_id: slave.slaveId,
         serial: slave.serial,
         polling: slave.polling,
         registers: slave.reads.map((read: any) => ({
@@ -182,7 +182,7 @@ export const updateDevice = async (id: string, data: UpdateDeviceDto & any) => {
       if (updatedPort.modbusSlaves) {
         processedModbusSlaves = updatedPort.modbusSlaves.map((slave: any) => {
           // Generate slaveId if not provided (new slave)
-          const slaveId = slave.slaveId || randomUUID();
+          const slaveId = slave.slaveId;
 
           // Process reads array and generate readIds
           const processedReads = (slave.reads || []).map((read: any) => {
