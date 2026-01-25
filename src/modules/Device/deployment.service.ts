@@ -127,6 +127,7 @@ export class DeploymentService {
         {
           message: 'config',
           hash: 'affec96b2753276f34ee87500bfc60836a1ac7a86af93fcac5edb4301b5ee4c3',
+          configId: config.configId,
           config,
         },
         {

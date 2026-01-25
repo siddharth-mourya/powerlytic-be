@@ -108,12 +108,13 @@ export const getConfigByDeviceId = async (id: string) => {
   const device = await Device.findById(id).lean();
   if (!device) throw new Error('Device not found');
   return {
-    deviceId: device._id,
+    device_id: device._id,
     configId: device.configId,
     imei: device.imei,
     modbusSlaves: device.ports.flatMap((port: any) =>
       (port.modbusSlaves || []).map((slave: any) => ({
-        slave_id: slave.slaveId,
+        unique_slave_id: '74bda1fd-119c-4589-b656-8dcb5ebf7050',
+        slave_id: 4,
         serial: slave.serial,
         polling: slave.polling,
         registers: slave.reads.map((read: any) => ({
