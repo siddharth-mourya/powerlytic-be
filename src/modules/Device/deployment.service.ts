@@ -128,7 +128,7 @@ export class DeploymentService {
         {
           message: 'config',
           hash: calculateConfigHash(config),
-          configId: 'cfg-modbus-005',
+          configId: config.configId,
           config,
         },
         {
