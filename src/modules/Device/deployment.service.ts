@@ -35,6 +35,7 @@ export class DeploymentService {
         throw apiError;
       }
 
+      console.log('Deployment initiated for device:', device);
       await device.save();
 
       return {
@@ -118,7 +119,8 @@ export class DeploymentService {
     try {
       // TODO: Configure your external API endpoint
       const externalApiUrl =
-        process.env.EXTERNAL_DEVICE_API_URL || 'http://device-api.example.com/deploy';
+        process.env.EXTERNAL_DEVICE_API_URL ||
+        'https://mqtt-to-http-bridge-git-333639897356.europe-west1.run.app/c2d/commands/696bf997ecbc1c803c08fc2a';
 
       const response = await axios.post(
         externalApiUrl,

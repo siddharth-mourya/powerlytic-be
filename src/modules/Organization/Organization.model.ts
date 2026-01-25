@@ -26,9 +26,4 @@ const OrganizationSchema = new Schema<IOrganization>(
   { timestamps: true },
 );
 
-// Create indexes
-OrganizationSchema.index({ code: 1 }, { unique: true });
-OrganizationSchema.index({ orgEmail: 1 }, { unique: true });
-OrganizationSchema.index({ orgPhone: 1 }, { unique: true });
-
 export const Organization = mongoose.model<IOrganization>('Organization', OrganizationSchema);

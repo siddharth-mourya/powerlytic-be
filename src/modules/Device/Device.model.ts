@@ -56,7 +56,7 @@ const ModbusReadSchema = new Schema(
     dataType: { type: String },
     endianness: {
       type: String,
-      enum: ['ABCD ', 'CDAB ', 'BADC ', 'DCBA', 'NONE'],
+      enum: ['ABCD', 'CDAB', 'BADC', 'DCBA', 'NONE'],
       default: 'NONE',
     },
   },
@@ -136,7 +136,5 @@ const DeviceSchema = new Schema(
   },
   { timestamps: true },
 );
-
-DeviceSchema.index({ imei: 1 }, { unique: true });
 
 export const Device = mongoose.model('Device', DeviceSchema);

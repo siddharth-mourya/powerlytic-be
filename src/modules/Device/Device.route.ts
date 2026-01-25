@@ -25,7 +25,12 @@ router.delete('/:id', authMiddleware, requireRole(UserRoles.CompanyAdmin), delet
 
 // 🔹 Deployment endpoints
 // Frontend initiates config deployment
-router.post('/:id/deploy', authMiddleware, requireRole(UserRoles.OrgAdmin), deployConfig);
+router.post(
+  '/:id/deploy',
+  authMiddleware,
+  requireRole([UserRoles.OrgAdmin, UserRoles.CompanyAdmin]),
+  deployConfig,
+);
 
 // Frontend polls for deployment status
 router.get('/:id/deployment-status', authMiddleware, getDeploymentStatus);

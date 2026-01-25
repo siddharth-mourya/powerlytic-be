@@ -40,7 +40,7 @@ export interface IModbusRead {
   unit?: string;
   tag?: string;
   dataType?: string;
-  endianness?: 'ABCD ' | 'CDAB ' | 'BADC ' | 'DCBA' | 'NONE';
+  endianness?: 'ABCD' | 'CDAB' | 'BADC' | 'DCBA' | 'NONE';
 }
 
 // 🔹 Serial Configuration Interface
