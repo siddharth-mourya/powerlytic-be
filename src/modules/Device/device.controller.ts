@@ -56,7 +56,7 @@ export const deployConfig = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const result = await deploymentService.deployConfig(id);
-    res.status(202).json({
+    res.status(201).json({
       message: 'Config deployment initiated',
       deployment: result,
     });
