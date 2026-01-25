@@ -1,0 +1,1919 @@
+{
+  "info": {
+    "_postman_id": "2a580f58-9ff6-4dbc-ab5e-97f2f694bfc3",
+    "name": "Powerlytic IoT Monitoring API",
+    "description": "Powerlytic IoT Monitoring Backend API - A comprehensive Express.js + TypeScript API for managing IoT devices, organizations, users, telemetry data, and alerts. Features JWT authentication with role-based access control (CompanyAdmin, OrgAdmin, OrgUser).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Root health check",
+          "id": "0d842ca3-ad74-4200-94e8-d93bf4d44c29",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API health status",
+          "id": "8f5814a6-3954-4f5a-ab9e-e676c91f7b1f",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/health-check",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "health-check"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "469888bc-7a6c-480f-b44d-28f5fb92e01e"
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "id": "cd0672ad-1471-4de2-881a-7f2fa009521b",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@powerlytic.com\",\n  \"password\": \"Admin@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "id": "1e89de5d-40e5-4348-a34a-98809b6f01e3",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/refresh",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request Password Reset",
+          "id": "2d793d19-cd50-4353-9f6a-f509ac0ef7d3",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/request-reset",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "request-reset"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "id": "5425b42a-a8c0-486e-b9ef-40ac0d6d4847",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"token\": \"resetToken\",\n  \"newPassword\": \"newPassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/reset-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "reset-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User",
+          "id": "fb2e86a5-4fc6-42d8-a669-ed0543bcf5c6",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "id": "5f3f09ac-c4d4-4e61-8429-c73373730018",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "2ed764d2-53ad-4dbc-8117-841ccf7f20a7"
+    },
+    {
+      "name": "Organizations",
+      "item": [
+        {
+          "name": "Create Organization",
+          "id": "222d227e-67d2-4b8e-815c-7a1380d182ee",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Acme Corp\",\n  \"address\": \"123 Main St\",\n  \"orgEmail\": \"contact@acme.com\",\n  \"orgPhone\": \"+1234567890\",\n  \"isActive\": true,\n  \"cin\": \"CIN123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/organizations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "organizations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Organizations",
+          "id": "340526ae-3317-4d66-b98f-a4b3d7b66880",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/organizations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "organizations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Organization by ID",
+          "id": "61144ca0-034f-447e-a200-7211d61b80db",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/organizations/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "organizations",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Organization",
+          "id": "67dfafdd-7f20-4eb9-af0b-11c7ece7f563",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Org Name\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/organizations/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "organizations",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Organization",
+          "id": "b7c8e876-6733-40d6-94da-e89ac9efd2eb",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/organizations/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "organizations",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "11786f00-34f0-4ad6-b7b0-0e719a38fcfd"
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get Users by Organization",
+          "id": "ab74c14b-5f66-4964-97a2-01fca1c83df9",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/org/:orgID",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "org",
+                ":orgID"
+              ],
+              "variable": [
+                {
+                  "key": "orgID",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Users",
+          "id": "009e00ba-b561-45df-8567-339a5c62f2ee",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by ID",
+          "id": "0ec05dc5-46be-4d25-a128-96fbc7977252",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "id": "60442cdd-7fb9-4591-a231-be6665f93a15",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Name\",\n  \"phone\": \"+1234567890\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "id": "42cea3fc-6f05-4d15-87de-825baa7aa617",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register Company Admin",
+          "id": "5dfcab0d-009c-46fe-afb0-b080f9a96f16",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@company.com\",\n  \"password\": \"password123\",\n  \"name\": \"Admin User\",\n  \"phone\": \"+1234567890\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/register-company-admin",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "register-company-admin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register Organization",
+          "id": "291bfdd6-571f-4d73-8eab-61bf94a773a6",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orgData\": {\n    \"name\": \"New Org\",\n    \"address\": \"456 Oak Ave\",\n    \"orgEmail\": \"org@example.com\",\n    \"orgPhone\": \"+1234567890\",\n    \"cin\": \"CIN789\"\n  },\n  \"adminUser\": {\n    \"email\": \"orgadmin@example.com\",\n    \"password\": \"password123\",\n    \"name\": \"Org Admin\",\n    \"phone\": \"+1234567890\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/register-organization",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "register-organization"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register Org User",
+          "id": "2cb80254-54dc-4697-a16b-cae0070b19dd",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@org.com\",\n  \"password\": \"password123\",\n  \"name\": \"Org User\",\n  \"phone\": \"+1234567890\",\n  \"organization\": \"{{organizationId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/register-org-user",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "register-org-user"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "9c91ac74-7d2f-48ac-86f4-66e9c494f15b"
+    },
+    {
+      "name": "Devices",
+      "item": [
+        {
+          "name": "Create Device",
+          "id": "cf513e6d-7eaa-4dfd-a93b-7d5ea6c6eb7c",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"configId\": \"CONFIG001\",\n  \"name\": \"Device 1\",\n  \"imei\": \"123456789012345\",\n  \"deviceModelId\": \"{{deviceModelId}}\",\n  \"organizationId\": \"{{organizationId}}\",\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/device",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "device"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Devices",
+          "id": "7346bd9b-d9fe-4d6d-b10c-25ab51cb319a",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/device",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "device"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Device by ID",
+          "id": "022bdc44-df41-4cf2-9c49-a07fa5814054",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/device/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "device",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Device Config",
+          "id": "050dddcc-37d9-42cb-b0dd-e41b201f5f79",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/device/:id/config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "device",
+                ":id",
+                "config"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Device",
+          "id": "a516da0a-235c-42e6-ac3f-8ba594b6a7b3",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Device Name\",\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/device/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "device",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Device",
+          "id": "74f9904d-8e67-4ede-b9c2-a84ceb66d5e2",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/device/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "device",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deploy Device",
+          "id": "cecf6208-e240-4825-86de-7418b412067f",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"configVersion\": \"1.0\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/device/:id/deploy",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "device",
+                ":id",
+                "deploy"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Deployment Status",
+          "id": "528505e3-a2d8-4102-b851-0f02bf9c323c",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/device/:id/deployment-status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "device",
+                ":id",
+                "deployment-status"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Deployment Status",
+          "id": "f6c45a6d-c012-4c92-bdfe-33a465582926",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"deployed\",\n  \"message\": \"Deployment successful\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/device/:id/deployment-status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "device",
+                ":id",
+                "deployment-status"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "19f4e15c-9c90-4f16-839e-cf3ffbd6f6b5"
+    },
+    {
+      "name": "Device Models",
+      "item": [
+        {
+          "name": "Get All Device Models",
+          "id": "6f9df859-e757-4b08-aa4e-f6223bd9ad98",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/device-models",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "device-models"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Device Model by ID",
+          "id": "41c7bd78-5b37-4bfc-a586-b403ec7d55da",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/device-models/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "device-models",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Device Model",
+          "id": "9490cca1-b8c7-4a21-956f-5d55922b99f2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Model X\",\n  \"description\": \"IoT Device Model\",\n  \"microControllerType\": \"ESP32\",\n  \"ports\": []\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/device-models",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "device-models"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Device Model",
+          "id": "852288e7-09ce-4f6a-ba5e-952cce85b084",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/device-models/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "device-models",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "94b2807d-f368-4dd6-a4c9-40b3b1ac667c"
+    },
+    {
+      "name": "Port Types",
+      "item": [
+        {
+          "name": "Create Port Type",
+          "id": "b229280a-7d3a-44a5-9e23-01ab03ba5bbf",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Temperature Sensor\",\n  \"category\": \"input\",\n  \"valueFormat\": \"analog\",\n  \"description\": \"Temperature sensor port\",\n  \"codeName\": \"TEMP_01\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/port-types",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "port-types"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Port Types",
+          "id": "d72f4574-f95f-47ac-874b-d99548ea9488",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/port-types",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "port-types"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Port Type by ID",
+          "id": "0058033e-3b35-47b5-b262-d3a6ec01fab9",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/port-types/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "port-types",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Port Type",
+          "id": "ccc9fca6-ffa7-4409-bf2f-d025bd389557",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Port Type\",\n  \"description\": \"Updated description\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/port-types/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "port-types",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Port Type",
+          "id": "dba1c078-853b-4be0-8788-ddd2319bbe56",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/port-types/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "port-types",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "aebb57b2-5a63-4069-a1cc-61d629eec811"
+    },
+    {
+      "name": "Values (Telemetry)",
+      "item": [
+        {
+          "name": "Create Value",
+          "id": "b59758f1-1f98-4b74-b932-a176fba74c7e",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ts\": \"2024-01-01T00:00:00Z\",\n  \"port\": {\n    \"portKey\": \"port1\",\n    \"portType\": \"temperature\"\n  },\n  \"rawValue\": 25.5,\n  \"calibratedValue\": 25.5,\n  \"unit\": \"°C\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/values/devices/:deviceId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "values",
+                "devices",
+                ":deviceId"
+              ],
+              "variable": [
+                {
+                  "key": "deviceId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Values by Device",
+          "id": "25c898c1-b0dd-4bfb-a651-8b75a1f28c60",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/values/devices/:deviceId?portKey=&readId=&startTime=&endTime=&limit=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "values",
+                "devices",
+                ":deviceId"
+              ],
+              "query": [
+                {
+                  "key": "portKey",
+                  "value": ""
+                },
+                {
+                  "key": "readId",
+                  "value": ""
+                },
+                {
+                  "key": "startTime",
+                  "value": ""
+                },
+                {
+                  "key": "endTime",
+                  "value": ""
+                },
+                {
+                  "key": "limit",
+                  "value": ""
+                }
+              ],
+              "variable": [
+                {
+                  "key": "deviceId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Latest Values",
+          "id": "ab8d16cd-a697-4834-8882-fbd1de72b6c7",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/values/devices/:deviceId/latest",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "values",
+                "devices",
+                ":deviceId",
+                "latest"
+              ],
+              "variable": [
+                {
+                  "key": "deviceId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Values by Port",
+          "id": "de3090b0-c289-47e0-8aca-7b26d95f7545",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/values/devices/:deviceId/port/:portKey?startTime=&endTime=&limit=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "values",
+                "devices",
+                ":deviceId",
+                "port",
+                ":portKey"
+              ],
+              "query": [
+                {
+                  "key": "startTime",
+                  "value": ""
+                },
+                {
+                  "key": "endTime",
+                  "value": ""
+                },
+                {
+                  "key": "limit",
+                  "value": ""
+                }
+              ],
+              "variable": [
+                {
+                  "key": "deviceId",
+                  "value": ""
+                },
+                {
+                  "key": "portKey",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Values by Modbus Read ID",
+          "id": "34bba7a5-e387-4759-8613-8f05a0b32df4",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/values/devices/:deviceId/modbus/:readId?startTime=&endTime=&limit=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "values",
+                "devices",
+                ":deviceId",
+                "modbus",
+                ":readId"
+              ],
+              "query": [
+                {
+                  "key": "startTime",
+                  "value": ""
+                },
+                {
+                  "key": "endTime",
+                  "value": ""
+                },
+                {
+                  "key": "limit",
+                  "value": ""
+                }
+              ],
+              "variable": [
+                {
+                  "key": "deviceId",
+                  "value": ""
+                },
+                {
+                  "key": "readId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Port Statistics",
+          "id": "3f5f4282-d6ab-49a0-b3bb-8e2959ede5f7",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/values/devices/:deviceId/stats/:portKey?startTime=&endTime=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "values",
+                "devices",
+                ":deviceId",
+                "stats",
+                ":portKey"
+              ],
+              "query": [
+                {
+                  "key": "startTime",
+                  "value": ""
+                },
+                {
+                  "key": "endTime",
+                  "value": ""
+                }
+              ],
+              "variable": [
+                {
+                  "key": "deviceId",
+                  "value": ""
+                },
+                {
+                  "key": "portKey",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Values Table",
+          "id": "9f23630d-f002-4381-aabc-c61b1f70a9ff",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/values/devices/:deviceId/table?startTime=&endTime=&limit=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "values",
+                "devices",
+                ":deviceId",
+                "table"
+              ],
+              "query": [
+                {
+                  "key": "startTime",
+                  "value": ""
+                },
+                {
+                  "key": "endTime",
+                  "value": ""
+                },
+                {
+                  "key": "limit",
+                  "value": ""
+                }
+              ],
+              "variable": [
+                {
+                  "key": "deviceId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Device Snapshot",
+          "id": "1219fc66-561d-41ae-9906-9646fe49da72",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/values/devices/:deviceId/snapshot",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "values",
+                "devices",
+                ":deviceId",
+                "snapshot"
+              ],
+              "variable": [
+                {
+                  "key": "deviceId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Timeseries by Port",
+          "id": "447b1b93-f5b3-4ae1-9373-fc48b96d5b3e",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/values/devices/:deviceId/timeseries/:portKey?startTime=&endTime=&limit=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "values",
+                "devices",
+                ":deviceId",
+                "timeseries",
+                ":portKey"
+              ],
+              "query": [
+                {
+                  "key": "startTime",
+                  "value": ""
+                },
+                {
+                  "key": "endTime",
+                  "value": ""
+                },
+                {
+                  "key": "limit",
+                  "value": ""
+                }
+              ],
+              "variable": [
+                {
+                  "key": "deviceId",
+                  "value": ""
+                },
+                {
+                  "key": "portKey",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Timeseries by Modbus Read ID",
+          "id": "b64878c5-7f3d-4947-b4b5-530ecd6d33b4",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/values/devices/:deviceId/timeseries/modbus/:readId?startTime=&endTime=&limit=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "values",
+                "devices",
+                ":deviceId",
+                "timeseries",
+                "modbus",
+                ":readId"
+              ],
+              "query": [
+                {
+                  "key": "startTime",
+                  "value": ""
+                },
+                {
+                  "key": "endTime",
+                  "value": ""
+                },
+                {
+                  "key": "limit",
+                  "value": ""
+                }
+              ],
+              "variable": [
+                {
+                  "key": "deviceId",
+                  "value": ""
+                },
+                {
+                  "key": "readId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Device Status",
+          "id": "e2a3ef36-e47e-403a-b112-e223cb8fe503",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/values/devices/:deviceId/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "values",
+                "devices",
+                ":deviceId",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "deviceId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Export Device Values",
+          "id": "c5087cfc-ca5d-44d0-98af-e136224d228a",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/values/devices/:deviceId/export?startTime=&endTime=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "values",
+                "devices",
+                ":deviceId",
+                "export"
+              ],
+              "query": [
+                {
+                  "key": "startTime",
+                  "value": ""
+                },
+                {
+                  "key": "endTime",
+                  "value": ""
+                }
+              ],
+              "variable": [
+                {
+                  "key": "deviceId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "a99d0a3c-e0f0-4c7b-80d8-c193fea28d4a"
+    },
+    {
+      "name": "Alerts",
+      "item": [
+        {
+          "name": "Create Alert",
+          "id": "15ac7232-e615-47cc-9c5f-afd6c95cc504",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceId\": \"{{deviceId}}\",\n  \"value\": 100,\n  \"message\": \"High temperature alert\",\n  \"severity\": \"high\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/alerts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "alerts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Alerts",
+          "id": "47c42046-baf1-448a-9d0a-3f0657ff9cae",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/alerts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "alerts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Alert by ID",
+          "id": "0ebdedde-8af8-4a53-a846-9676806c5cb1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/alerts/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "alerts",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Alert",
+          "id": "3d3d61a0-dac5-44bf-91ae-b8f68630de70",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"acknowledged\",\n  \"message\": \"Alert acknowledged\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/alerts/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "alerts",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Alert",
+          "id": "c8bc3b13-eb2a-49fc-aae7-28d4d91a90ed",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/alerts/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "alerts",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "9c501ee3-94ed-455d-9f45-1485c9ee28bb"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM1NjJkNTFkNWI3MTUzMjYyNDFiNDQiLCJyb2xlIjoiQ29tcGFueUFkbWluIiwib3JnSWQiOm51bGwsImlhdCI6MTc2OTMyMzUwMCwiZXhwIjoxNzY5MzI0NDAwfQ.apPlrlHEfcvaUzQC1D9EiSZ3VtfVMvHoeFUgvYz7kY0",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "id": "713742ad-4869-496c-826f-567fd7913bdd",
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "id": "d25c1d90-214d-4b18-bfe6-479dadd9c271",
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "id": "32ea7ca1-4b88-4ac0-95e1-8834ab58c58e",
+      "key": "refreshToken",
+      "value": ""
+    }
+  ]
+}

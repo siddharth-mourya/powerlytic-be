@@ -103,6 +103,17 @@ const PortSchema = new Schema(
   { _id: false },
 );
 
+// 🔹 Deployment Schema
+const DeploymentSchema = new Schema(
+  {
+    status: { type: String, enum: ['pending', 'sent', 'saved', 'error'], default: 'pending' },
+    errorMessage: { type: String, default: null, required: false },
+    sentAt: Date,
+    savedAt: Date,
+  },
+  { _id: false },
+);
+
 // 🔹 Main Device Schema
 const DeviceSchema = new Schema(
   {
@@ -121,6 +132,7 @@ const DeviceSchema = new Schema(
     assignedAt: Date,
     lastSeen: Date,
     manufacturingYear: Date,
+    deployment: DeploymentSchema,
   },
   { timestamps: true },
 );

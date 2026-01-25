@@ -109,8 +109,21 @@ export interface IDevice {
   assignedAt?: Date;
   lastSeen?: Date;
   manufacturingYear?: Date;
+  deployment?: DeploymentStatus;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface DeploymentStatus {
+  status: 'pending' | 'sent' | 'saved' | 'error';
+  errorMessage?: string;
+  sentAt?: Date;
+  savedAt?: Date;
+}
+
+export interface UpdateStatusPayload {
+  status: 'saved' | 'error';
+  errorMessage?: string;
 }
 
 // 🔹 Device Creation Input (without _id and timestamps)
