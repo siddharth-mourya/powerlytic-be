@@ -1,6 +1,8 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { randomUUID } from 'crypto';
 
 export interface IOrganization extends Document {
+  code: string;
   name: string;
   address: string;
   orgEmail: string;
@@ -13,6 +15,7 @@ export interface IOrganization extends Document {
 
 const OrganizationSchema = new Schema<IOrganization>(
   {
+    code: { type: String, required: true, unique: true, default: () => randomUUID() },
     name: { type: String, required: true },
     address: { type: String, required: true },
     orgEmail: { type: String, required: true, unique: true },
@@ -22,5 +25,10 @@ const OrganizationSchema = new Schema<IOrganization>(
   },
   { timestamps: true },
 );
+
+// Create indexes
+OrganizationSchema.index({ code: 1 }, { unique: true });
+OrganizationSchema.index({ orgEmail: 1 }, { unique: true });
+OrganizationSchema.index({ orgPhone: 1 }, { unique: true });
 
 export const Organization = mongoose.model<IOrganization>('Organization', OrganizationSchema);
