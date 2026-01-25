@@ -113,7 +113,7 @@ export const getConfigByDeviceId = async (id: string) => {
     imei: device.imei,
     modbusSlaves: device.ports.flatMap((port: any) =>
       (port.modbusSlaves || []).map((slave: any) => ({
-        unique_slave_id: slave.slaveId,
+        unique_slave_id: String(slave.slaveId),
         slave_id: slave.slaveId,
         serial: slave.serial,
         polling: slave.polling,
