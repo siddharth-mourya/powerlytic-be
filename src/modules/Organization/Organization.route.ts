@@ -11,10 +11,10 @@ import {
 
 const router = Router();
 
-router.post('/', authMiddleware, requireRole(UserRoles.OrgAdmin), createOrganization);
+router.post('/', authMiddleware, createOrganization);
 router.get('/', authMiddleware, getOrganizations);
 router.get('/:id', authMiddleware, getOrganizationById);
-router.put('/:id', authMiddleware, requireRole(UserRoles.OrgAdmin), updateOrganization);
-router.delete('/:id', authMiddleware, requireRole(UserRoles.OrgAdmin), deleteOrganization);
+router.put('/:id', authMiddleware, updateOrganization);
+router.delete('/:id', authMiddleware, deleteOrganization);
 
 export default router;
