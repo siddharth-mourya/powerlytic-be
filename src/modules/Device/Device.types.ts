@@ -124,7 +124,7 @@ export interface DeploymentStatus {
 export interface UpdateStatusPayload {
   status: 'applied' | 'error';
   configId?: string;
-  errorMessage?: string;
+  message?: string;
 }
 
 // 🔹 Device Creation Input (without _id and timestamps)

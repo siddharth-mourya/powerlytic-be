@@ -96,7 +96,7 @@ export class DeploymentService {
         device.deployment.savedAt = new Date();
         device.deployment.errorMessage = null;
       } else if (payload.status === 'error') {
-        device.deployment.errorMessage = payload.errorMessage || 'Unknown error occurred';
+        device.deployment.errorMessage = payload.message || 'Unknown error occurred';
       }
 
       await device.save();
