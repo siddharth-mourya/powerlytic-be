@@ -1888,24 +1888,24 @@
     "bearer": [
       {
         "key": "token",
-        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM1NjJkNTFkNWI3MTUzMjYyNDFiNDQiLCJyb2xlIjoiQ29tcGFueUFkbWluIiwib3JnSWQiOm51bGwsImlhdCI6MTc2OTMzOTI3OCwiZXhwIjoxNzY5MzQyODc4fQ.ziGo2RBWhiKu0PafZZD6nz-5rYxyPTE5OUwPVHOJUuA",
+        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM1NjJkNTFkNWI3MTUzMjYyNDFiNDQiLCJyb2xlIjoiQ29tcGFueUFkbWluIiwib3JnSWQiOm51bGwsImlhdCI6MTc2OTM0MzY1MSwiZXhwIjoxNzY5MzQ3MjUxfQ.RYazUEC60dW7j25i1C8Sxi5ZEQ2q48c7MKMStE9daQE",
         "type": "string"
       }
     ]
   },
   "variable": [
     {
-      "id": "38ea981f-f9d6-440e-b844-833b535d516b",
+      "id": "eacf41b7-ea73-41f8-8742-f5f971babe1c",
       "key": "baseUrl",
       "value": ""
     },
     {
-      "id": "71fad117-9384-4de7-85b5-fe85421eac65",
+      "id": "1141da28-b271-4927-b144-ec3d24186d07",
       "key": "accessToken",
       "value": ""
     },
     {
-      "id": "7de84eb7-42db-4504-8403-4d175930ae99",
+      "id": "a02b64a1-6aca-4232-b64f-8d9e9cc88bf1",
       "key": "refreshToken",
       "value": ""
     }

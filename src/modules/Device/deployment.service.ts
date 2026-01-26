@@ -19,7 +19,7 @@ export class DeploymentService {
       // Initialize deployment record
       device.deployment = {
         status: 'pending',
-        errorMessage: null,
+        message: null,
       };
 
       // Call external API to send config to device
@@ -31,7 +31,7 @@ export class DeploymentService {
         device.deployment.sentAt = new Date();
       } catch (apiError: any) {
         device.deployment.status = 'error';
-        device.deployment.errorMessage = `Failed to send config: ${apiError.message}`;
+        device.deployment.message = `Failed to send config: ${apiError.message}`;
         await device.save();
         throw apiError;
       }
@@ -64,7 +64,7 @@ export class DeploymentService {
 
       return {
         status: device.deployment.status,
-        errorMessage: device.deployment.errorMessage || undefined,
+        message: device.deployment.message || undefined,
         sentAt: device.deployment.sentAt || undefined,
         savedAt: device.deployment.savedAt || undefined,
       };
@@ -94,16 +94,16 @@ export class DeploymentService {
 
       if (payload.status === 'applied') {
         device.deployment.savedAt = new Date();
-        device.deployment.errorMessage = null;
+        device.deployment.message = null;
       } else if (payload.status === 'error') {
-        device.deployment.errorMessage = payload.message || 'Unknown error occurred';
+        device.deployment.message = payload.message || 'Unknown error occurred';
       }
 
       await device.save();
 
       return {
         status: device.deployment.status,
-        errorMessage: device.deployment.errorMessage || undefined,
+        message: device.deployment.message || undefined,
         sentAt: device.deployment.sentAt || undefined,
         savedAt: device.deployment.savedAt || undefined,
       };

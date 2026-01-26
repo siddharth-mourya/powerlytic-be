@@ -116,7 +116,7 @@ export interface IDevice {
 
 export interface DeploymentStatus {
   status: 'pending' | 'sent' | 'applied' | 'error';
-  errorMessage?: string;
+  message?: string;
   sentAt?: Date;
   savedAt?: Date;
 }

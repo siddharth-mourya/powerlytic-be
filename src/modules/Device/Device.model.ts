@@ -106,7 +106,7 @@ const PortSchema = new Schema(
 const DeploymentSchema = new Schema(
   {
     status: { type: String, enum: ['pending', 'sent', 'applied', 'error'], default: 'pending' },
-    errorMessage: { type: String, default: null, required: false },
+    message: { type: String, default: null, required: false },
     sentAt: Date,
     savedAt: Date,
   },
