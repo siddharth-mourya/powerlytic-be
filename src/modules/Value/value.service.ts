@@ -1,7 +1,8 @@
-import { Value, IValue } from './Value.model';
-import { Device } from '../Device/Device.model';
 import mongoose from 'mongoose';
-import { transformDevicePayload, DevicePayload } from './valueTransformation.service';
+import { Device } from '../Device/Device.model';
+import { Value } from './Value.model';
+import { DevicePayload, transformDevicePayload } from './valueTransformation.service';
+import { ILatestValuesResponse, IModbusReadWithValue } from './value.types';
 
 /**
  * 📊 Value Service
@@ -177,13 +178,31 @@ export const getPortValues = async (
 };
 
 /**
- * Get latest value for each port of a device
- * For Modbus ports, returns latest value for each read (not just one per port)
+ * Get latest value for each port of a device with complete port details
+ *
+ * Returns:
+ * - Device information (name, status, etc.)
+ * - For each port: raw value, calibrated value, unit, name, description, status
+ * - For Modbus ports: returns latest value for each read (not just one per port)
+ * - All IDs (portKey, readId, slaveId), timestamps, and quality indicators
  */
-export const getLatestValues = async (deviceId: string) => {
+export const getLatestValues = async (
+  deviceId: string,
+): Promise<ILatestValuesResponse | { success: false; message: string; data: [] }> => {
+  // Fetch device with all port details
+  const device = await Device.findById(deviceId).lean().exec();
+
+  if (!device) {
+    return {
+      success: false,
+      message: 'Device not found',
+      data: [],
+    };
+  }
+
   // Pipeline to get latest value for each port + read combination
   // Groups by portKey and readId (readId will be null for DI/AI ports)
-  const latest = await Value.aggregate([
+  const latestValueDocs = await Value.aggregate([
     {
       $match: {
         'metadata.deviceId': new mongoose.Types.ObjectId(deviceId),
@@ -206,7 +225,102 @@ export const getLatestValues = async (deviceId: string) => {
     },
   ]);
 
-  return latest.map((item) => item.lastValue);
+  // Create a map of portKey/readId to value document
+  const valueMap = new Map();
+  latestValueDocs.forEach((item: any) => {
+    const key = item.lastValue.modbusRead?.readId
+      ? `${item.lastValue.port.portKey}:${item.lastValue.modbusRead.readId}`
+      : item.lastValue.port.portKey;
+    valueMap.set(key, item.lastValue);
+  });
+
+  // Build enriched response with device and port details
+  const portsData = device.ports.map((port: any) => {
+    if (port.portKey.includes('MI_') && port.modbusSlaves && port.modbusSlaves.length > 0) {
+      // For Modbus ports, return data for each read
+      const reads: IModbusReadWithValue[] = [];
+      port.modbusSlaves.forEach((slave: any) => {
+        slave.reads?.forEach((read: any) => {
+          const key = `${port.portKey}:${read.readId}`;
+          const valueData = valueMap.get(key);
+
+          reads.push({
+            // IDs
+            portKey: port.portKey,
+            readId: read.readId,
+            slaveId: slave.slaveId,
+            // Read details
+            name: read.name,
+            description: read.description,
+            tag: read.tag,
+            unit: read.unit,
+            dataType: read.dataType,
+            // Register configuration
+            startAddress: read.startAddress,
+            bitsToRead: read.bitsToRead,
+            endianness: read.endianness,
+            registerType: read.registerType,
+            functionCode: read.functionCode,
+            // Calibration
+            scaling: read.scaling,
+            offset: read.offset,
+            // Latest values
+            rawValue: valueData?.rawValue ?? null,
+            calibratedValue: valueData?.calibratedValue ?? null,
+            parsedValue: valueData?.modbusRegisters?.parsedValue ?? null,
+            rawRegisters: valueData?.modbusRegisters?.rawRegisters ?? null,
+            quality: valueData?.quality ?? 'uncertain',
+            timestamp: valueData?.ts ?? null,
+            ingestTimestamp: valueData?.ingestTs ?? null,
+          });
+        });
+      });
+
+      return {
+        portKey: port.portKey,
+        portType: 'MODBUS',
+        name: port.name,
+        unit: port.unit,
+        status: port.status,
+        calibration: port.calibrationValue,
+        thresholds: port.thresholds,
+        reads,
+      };
+    } else {
+      // For Digital/Analog ports, single value per port
+      const valueData = valueMap.get(port.portKey);
+
+      return {
+        // IDs
+        portKey: port.portKey,
+        // Port details
+        portType: port.portType,
+        name: port.name,
+        unit: port.unit,
+        status: port.status,
+        // Configuration
+        calibration: port.calibrationValue,
+        thresholds: port.thresholds,
+        // Latest value
+        rawValue: valueData?.rawValue ?? null,
+        calibratedValue: valueData?.calibratedValue ?? null,
+        quality: valueData?.quality ?? 'uncertain',
+        timestamp: valueData?.ts ?? null,
+        ingestTimestamp: valueData?.ingestTs ?? null,
+      };
+    }
+  });
+
+  return {
+    success: true,
+    device: {
+      id: deviceId,
+      name: device.name,
+      status: device.status,
+    },
+    count: portsData.length,
+    ports: portsData,
+  };
 };
 
 /**

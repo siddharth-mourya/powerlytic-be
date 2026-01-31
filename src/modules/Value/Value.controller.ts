@@ -152,11 +152,7 @@ export const getLatestValues = async (req: Request, res: Response) => {
 
     const values = await valueService.getLatestValues(deviceId);
 
-    return res.status(200).json({
-      success: true,
-      count: values.length,
-      data: values,
-    });
+    return res.status(200).json(values);
   } catch (err: any) {
     console.error('❌ Error retrieving latest values:', err);
     return res.status(400).json({
