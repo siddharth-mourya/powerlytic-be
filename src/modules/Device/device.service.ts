@@ -219,7 +219,7 @@ export const updateDevice = async (id: string, data: UpdateDeviceDto & any) => {
       // Only allow updating specific fields
       return {
         portKey: originalPort.portKey, // Immutable
-        name: originalPort.name, // Immutable
+        name: updatedPort.name,
         portType: originalPort.portType, // Immutable
         unit: updatedPort.unit !== undefined ? updatedPort.unit : originalPort.unit,
         calibrationValue: updatedPort.calibrationValue || originalPort.calibrationValue,
