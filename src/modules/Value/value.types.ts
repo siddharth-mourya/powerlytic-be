@@ -11,6 +11,7 @@ export interface IPortValueData {
 
 // 🔹 Modbus Read with Latest Value
 export interface IModbusReadWithValue extends IModbusRead {
+  slaveName: string;
   // Value data
   rawValue: number | boolean | string | null;
   calibratedValue: number | boolean | string | null;

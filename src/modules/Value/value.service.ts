@@ -249,6 +249,7 @@ export const getLatestValues = async (
             portKey: port.portKey,
             readId: read.readId,
             slaveId: slave.slaveId,
+            slaveName: slave.name,
             // Read details
             name: read.name,
             description: read.description,
