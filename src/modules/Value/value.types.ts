@@ -1,58 +1,61 @@
-import { ILocation, IModbusRead, IPort } from '../Device/Device.types';
+// utils/latestValues.types.ts
 
-// 🔹 Latest Value Data Interface
-export interface IPortValueData {
+import { IModbusRead, IPort } from '../Device/Device.types';
+
+/* -------------------- Common -------------------- */
+
+export type Quality = 'good' | 'bad' | 'uncertain';
+
+export interface ILatestValueMeta {
   rawValue: number | boolean | string | null;
   calibratedValue: number | boolean | string | null;
-  quality: 'good' | 'bad' | 'uncertain';
+  quality: Quality;
   timestamp: Date | null;
   ingestTimestamp: Date | null;
 }
 
-// 🔹 Modbus Read with Latest Value
-export interface IModbusReadWithValue extends IModbusRead {
-  slaveName: string;
-  // Value data
+/* -------------------- Modbus -------------------- */
+
+export interface IModbusReadWithLatestValue extends IModbusRead {
   rawValue: number | boolean | string | null;
   calibratedValue: number | boolean | string | null;
   parsedValue?: number | null;
   rawRegisters?: string[] | null;
-  quality: 'good' | 'bad' | 'uncertain';
+  quality: Quality;
   timestamp: Date | null;
   ingestTimestamp: Date | null;
 }
 
-// 🔹 Port with Latest Value (for non-Modbus ports)
-export interface IPortWithValue extends Omit<IPort, 'modbusSlaves'> {
-  rawValue: number | boolean | string | null;
-  calibratedValue: number | boolean | string | null;
-  quality: 'good' | 'bad' | 'uncertain';
-  timestamp: Date | null;
-  ingestTimestamp: Date | null;
+export interface IModbusSlaveWithLatestValues {
+  slaveId: string;
+  name: string;
+  polling: any;
+  serial: any;
+  reads: IModbusReadWithLatestValue[];
 }
 
-// 🔹 Modbus Port with Latest Values (for each read)
-export interface IModbusPortWithValues extends Omit<IPort, 'modbusSlaves'> {
-  reads: IModbusReadWithValue[];
+export interface IModbusPortWithLatestValues extends Omit<IPort, 'modbusSlaves'> {
+  portType: 'MODBUS';
+  slaves: IModbusSlaveWithLatestValues[];
 }
 
-// 🔹 Device Info with Latest Values
+/* -------------------- Non-Modbus -------------------- */
+
+export interface IPortWithLatestValue extends Omit<IPort, 'modbusSlaves'>, ILatestValueMeta {
+  portType: 'DI' | 'DO' | 'AI' | 'AO';
+}
+
+/* -------------------- Device Response -------------------- */
+
 export interface IDeviceWithLatestValues {
   id: string;
   name: string;
   status: 'online' | 'offline' | 'maintenance';
 }
 
-// 🔹 Latest Values Response (for both frontend and backend)
 export interface ILatestValuesResponse {
-  success: boolean;
+  success: true;
   device: IDeviceWithLatestValues;
   count: number;
-  ports: (IPortWithValue | IModbusPortWithValues)[];
-}
-
-// 🔹 API Response wrapper for latest values
-export interface ILatestValuesApiResponse {
-  success: boolean;
-  data: ILatestValuesResponse;
+  ports: (IPortWithLatestValue | IModbusPortWithLatestValues)[];
 }
