@@ -12,6 +12,7 @@ import portTypeRoutes from './modules/PortType/PortType.route';
 import valueRoutes from './modules/Value/Value.route';
 import alertRoutes from './modules/Alert/Alert.route';
 import healthRoutes from './modules/healthChecks/healthChecks.route';
+import auditLogRoutes from './modules/AuditLog/AuditLog.route';
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.use(`${API_PREFIX}/device-models`, deviceModelRoutes);
 app.use(`${API_PREFIX}/port-types`, portTypeRoutes);
 app.use(`${API_PREFIX}/values`, valueRoutes);
 app.use(`${API_PREFIX}/alerts`, alertRoutes);
+app.use(`${API_PREFIX}/v1`, auditLogRoutes);
 
 // Health Check
 app.get('/', (req, res) => res.send('🚀 IoT Monitoring Backend is running'));

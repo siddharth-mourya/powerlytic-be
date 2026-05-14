@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { User } from '../User/User.model';
+import { emitAuditLog } from '../AuditLog/AuditLog.service';
 
 export const login = async (req: Request, res: Response) => {
   try {
@@ -24,7 +25,22 @@ export class AuthController {
       if (!userId || !refreshToken)
         return res.status(400).json({ error: 'userId and refreshToken required' });
 
-      const { accessToken, refreshToken: newRefreshToken, user } = await AuthService.refresh(userId, refreshToken);
+      const {
+        accessToken,
+        refreshToken: newRefreshToken,
+        user,
+      } = await AuthService.refresh(userId, refreshToken);
+
+      await emitAuditLog({
+        workspaceId: user.organization ? String(user.organization) : null,
+        organizationId: user.organization ? String(user.organization) : null,
+        actorUserId: String(user._id),
+        resourceType: 'credential',
+        resourceId: String(user._id),
+        action: 'credential.rotation',
+        after: { rotated: true },
+        reason: 'refresh token rotated',
+      });
 
       res.json({ user, accessToken, refreshToken: newRefreshToken });
     } catch (err: any) {
@@ -35,12 +51,22 @@ export class AuthController {
   static async logout(req: any, res: Response) {
     try {
       const { refreshToken } = req.body;
-      if (!refreshToken)
-        return res.status(400).json({ error: 'refreshToken required' });
+      if (!refreshToken) return res.status(400).json({ error: 'refreshToken required' });
 
       if (!req.user) return res.status(401).json({ error: 'unauthenticated' });
 
       await AuthService.logout(req.user.userId, refreshToken);
+      const user = await User.findById(req.user.userId).select('organization').lean();
+      await emitAuditLog({
+        workspaceId: user?.organization ? String(user.organization) : null,
+        organizationId: user?.organization ? String(user.organization) : null,
+        actorUserId: req.user.userId,
+        resourceType: 'credential',
+        resourceId: req.user.userId,
+        action: 'credential.revocation',
+        after: { revoked: true },
+        reason: 'logout refresh token revoked',
+      });
       res.status(204).send();
     } catch (err: any) {
       res.status(500).json({ error: err.message });
@@ -64,6 +90,19 @@ export class AuthController {
     try {
       const { email, token, newPassword } = req.body;
       await AuthService.resetPassword(email, token, newPassword);
+      const user = await User.findOne({ email }).select('organization').lean();
+      if (user) {
+        await emitAuditLog({
+          workspaceId: user.organization ? String(user.organization) : null,
+          organizationId: user.organization ? String(user.organization) : null,
+          actorUserId: String(user._id),
+          resourceType: 'credential',
+          resourceId: String(user._id),
+          action: 'credential.rotation',
+          after: { passwordReset: true, refreshTokensRevoked: true },
+          reason: 'password reset',
+        });
+      }
       res.json({ message: 'Password reset successful' });
     } catch (err: any) {
       res.status(400).json({ error: err.message });

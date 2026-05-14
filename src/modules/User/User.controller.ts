@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
+import { AuthRequest } from '../../middlewares/auth.middleware';
 import { User } from './User.model';
 import { Organization } from '../Organization/Organization.model';
 import { UserService } from './User.service';
+import { emitAuditLog } from '../AuditLog/AuditLog.service';
 
 const exludeFields = {
   '-password': 0,
@@ -12,19 +14,29 @@ const exludeFields = {
 };
 
 // Create user
-export const createUser = async (req: Request, res: Response) => {
+export const createUser = async (req: AuthRequest, res: Response) => {
   try {
     const org = await Organization.findById(req.body.organization);
     if (!org) return res.status(404).json({ message: 'Organization not found' });
 
     const user = await User.create(req.body);
+    await emitAuditLog({
+      workspaceId: String(org._id),
+      organizationId: String(org._id),
+      actorUserId: req.user?.userId,
+      resourceType: 'membership',
+      resourceId: String(user._id),
+      action: 'membership.add',
+      after: user,
+      reason: req.body.reason,
+    });
     res.status(201).json(user);
   } catch (err) {
     res.status(400).json({ message: (err as Error).message });
   }
 };
 
-export const registerCompanyAdmin = async (req: Request, res: Response) => {
+export const registerCompanyAdmin = async (req: AuthRequest, res: Response) => {
   try {
     const user = await UserService.registerCompanyAdmin(req.body);
     res.status(201).json({ user });
@@ -34,10 +46,35 @@ export const registerCompanyAdmin = async (req: Request, res: Response) => {
 };
 
 // Company admin registers an organization and initial OrgAdmin
-export const registerOrganizationAndAdmin = async (req: Request, res: Response) => {
+export const registerOrganizationAndAdmin = async (req: AuthRequest, res: Response) => {
   try {
     const { orgData, adminUser } = req.body;
     const result = await UserService.registerOrganizationAndAdmin({ orgData, adminUser });
+    const orgId = result.organization?._id ? String(result.organization._id) : null;
+    if (orgId) {
+      await emitAuditLog({
+        workspaceId: orgId,
+        organizationId: orgId,
+        actorUserId: req.user?.userId,
+        resourceType: 'workspace',
+        resourceId: orgId,
+        action: 'workspace.create',
+        after: result.organization,
+        reason: req.body.reason,
+      });
+    }
+    if (result.orgAdmin) {
+      await emitAuditLog({
+        workspaceId: orgId,
+        organizationId: orgId,
+        actorUserId: req.user?.userId,
+        resourceType: 'membership',
+        resourceId: String(result.orgAdmin._id),
+        action: 'membership.add',
+        after: result.orgAdmin,
+        reason: req.body.reason,
+      });
+    }
     res.status(201).json(result);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -45,9 +82,19 @@ export const registerOrganizationAndAdmin = async (req: Request, res: Response) 
 };
 
 // OrgAdmin (or CompanyAdmin) registers an org user
-export const registerOrgUser = async (req: Request, res: Response) => {
+export const registerOrgUser = async (req: AuthRequest, res: Response) => {
   try {
     const user = await UserService.registerOrgUser(req.body);
+    await emitAuditLog({
+      workspaceId: req.body.organization,
+      organizationId: req.body.organization,
+      actorUserId: req.user?.userId,
+      resourceType: 'membership',
+      resourceId: String(user._id),
+      action: 'membership.add',
+      after: user,
+      reason: req.body.reason,
+    });
     res.status(201).json(user);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -99,12 +146,26 @@ export const getUserById = async (req: Request, res: Response) => {
 };
 
 // Update user
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = async (req: AuthRequest, res: Response) => {
   try {
+    const before = await User.findById(req.params.id).lean();
     const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true }).populate(
       'organization',
     );
     if (!user) return res.status(404).json({ message: 'User not found' });
+    const workspaceId =
+      req.body.organization || (before?.organization ? String(before.organization) : null);
+    await emitAuditLog({
+      workspaceId,
+      organizationId: workspaceId,
+      actorUserId: req.user?.userId,
+      resourceType: 'membership',
+      resourceId: req.params.id,
+      action: 'membership.update',
+      before,
+      after: user,
+      reason: req.body.reason,
+    });
     res.json(user);
   } catch (err) {
     res.status(400).json({ message: (err as Error).message });
@@ -112,9 +173,20 @@ export const updateUser = async (req: Request, res: Response) => {
 };
 
 // Delete user
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (req: AuthRequest, res: Response) => {
   try {
-    await User.findByIdAndDelete(req.params.id);
+    const before = await User.findByIdAndDelete(req.params.id);
+    const workspaceId = before?.organization ? String(before.organization) : null;
+    await emitAuditLog({
+      workspaceId,
+      organizationId: workspaceId,
+      actorUserId: req.user?.userId,
+      resourceType: 'membership',
+      resourceId: req.params.id,
+      action: 'membership.remove',
+      before,
+      reason: req.body.reason,
+    });
     res.status(204).send();
   } catch (err) {
     res.status(500).json({ message: (err as Error).message });
