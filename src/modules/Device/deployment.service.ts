@@ -121,7 +121,7 @@ export class DeploymentService {
       // TODO: Configure your external API endpoint
       const externalApiUrl =
         process.env.EXTERNAL_DEVICE_API_URL ||
-        'https://mqtt-to-http-bridge-git-333639897356.europe-west1.run.app/c2d/commands/696bf997ecbc1c803c08fc2a';
+        'https://gcp-services-mqtt-to-http-cloud-function-git-165219018013.europe-west1.run.app/c2d/commands/696bf997ecbc1c803c08fc2a';
 
       const response = await axios.post(
         externalApiUrl,
